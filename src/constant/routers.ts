@@ -6,6 +6,7 @@
     courseDetail: 'courses/:id',
     login: 'login',
     register: 'register',
+    forgotPassword: 'forgot-password',
     student:{
         index: 'student',
         dashboard: 'student/dashboard',

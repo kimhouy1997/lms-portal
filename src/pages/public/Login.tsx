@@ -187,7 +187,7 @@ const Login = () => {
                 <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                   <Link 
                     component={RouterLink} 
-                    to="#" 
+                    to={`/${ROUTES.forgotPassword}`} 
                     variant="body2" 
                     sx={{ fontWeight: 600, color: 'primary.main', textDecoration: 'none' }}
                   >
@@ -196,6 +196,7 @@ const Login = () => {
                 </Box>
 
                 <Button
+                  loading={isLoading}
                   fullWidth
                   size="large"
                   type="submit"

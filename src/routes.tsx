@@ -7,6 +7,7 @@ import Courses from "./pages/public/Courses";
 import CourseDetail from "./pages/public/CourseDetail";
 import Login from "./pages/public/Login";
 import Register from "./pages/public/Register";
+import { ForgotPassword } from "./pages/public/ForgotPassword";
 
 import { ROUTES } from "./constant/routers";
 import { AuthGuard } from "./utils/auth/AuthGuard";
@@ -25,6 +26,7 @@ const routes: RouteObject[] = [
       { path: ROUTES.about, element: <About /> },
       { path: ROUTES.login, element: <Login /> },
       { path: ROUTES.register, element: <Register /> },
+      { path: ROUTES.forgotPassword, element: <ForgotPassword /> },
     ],
   },
 
