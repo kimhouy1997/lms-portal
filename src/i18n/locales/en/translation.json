@@ -2,19 +2,48 @@
   "welcome": "Welcome to LMS Portal",
   "subtitle": "Modern Learning Management System built with Vite + React",
   "interactions": "Interactions: {{count}}",
-  "edit_instruction": "Edit <1>src/App.tsx</1> to start building your premium LMS experience.",
+  "edit_instruction": "Edit <1>src/pages/Home.tsx</1> to customize this page.",
   "powered_by": "Powered by cutting-edge web technologies",
   "switch_language": "Khmer",
   "nav": {
     "home": "Home",
-    "about": "About"
+    "about": "About",
+    "courses": "Courses",
+    "pricing": "Pricing"
+  },
+  "hero": {
+    "title": "Master Your Future with Expert-Led Courses",
+    "description": "Join over 10,000 students learning from industry leaders. Start your journey today with our curated selection of professional courses.",
+    "cta_primary": "Explore Courses",
+    "cta_secondary": "How it Works"
   },
   "home": {
     "title": "Welcome to LMS Portal",
     "subtitle": "Your journey to excellence starts here."
   },
+  "courses": {
+    "title": "Featured Courses",
+    "subtitle": "Hand-picked courses to help you achieve your goals faster.",
+    "view_all": "View All Courses",
+    "categories": {
+      "development": "Development",
+      "design": "Design",
+      "business": "Business"
+    }
+  },
+  "promo": {
+    "title": "Limited Time Offer!",
+    "description": "Get 50% off on all professional certification courses. Enhance your skills and boost your career today.",
+    "cta": "Claim Offer Now"
+  },
   "about": {
     "title": "About Us",
     "description": "We are dedicated to providing the best learning experience through modern technology."
+  },
+  "footer": {
+    "description": "Empowering learners worldwide with accessible, high-quality education.",
+    "links": "Quick Links",
+    "contact": "Contact Us",
+    "rights": "All rights reserved."
   }
 }
