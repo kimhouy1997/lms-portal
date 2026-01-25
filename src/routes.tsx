@@ -3,7 +3,6 @@ import MainLayout from "./layouts/MainLayout";
 import Home from "./pages/Home";
 import About from "./pages/About";
 import Courses from "./pages/Courses";
-import Pricing from "./pages/Pricing";
 import CourseDetail from "./pages/CourseDetail";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
