@@ -28,6 +28,8 @@ import * as z from 'zod';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ROUTES } from '@/constant/routers';
+import { useLoginMutation } from '@root/src/redux/api/authApi';
+import { showToast } from '@/utils/toast';
 
 const loginSchema = z.object({
   email: z.string().email('Invalid email address'),
@@ -49,11 +51,17 @@ const Login = () => {
     resolver: zodResolver(loginSchema),
   });
 
+  const [login, { isLoading }] = useLoginMutation();
+
   const onSubmit = async (data: LoginForm) => {
-    // Simulate API call
-    console.log('Login data:', data);
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    navigate(ROUTES.home);
+    try {
+      await login(data).unwrap();
+      showToast.success('Login successful! Welcome back.');
+      navigate(ROUTES.home);
+    } catch (error: any) {
+      const errorMessage = error?.data?.detail || error?.data?.message || 'Login failed. Please check your credentials.';
+      showToast.error(errorMessage);
+    }
   };
 
   return (
