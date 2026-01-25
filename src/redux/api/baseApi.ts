@@ -1,9 +1,10 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import envs from '@/env.config';
 
 export const baseApi = createApi({
   reducerPath: 'api',
   baseQuery: fetchBaseQuery({ 
-    baseUrl: 'https://api.example.com/', // Replace with your actual API base URL
+    baseUrl: `${envs.API_BASE_URL}/api/${envs.API_VERSION}/`,
     prepareHeaders: (headers) => {
       // Add any custom headers like Authorization
       // const token = (getState() as RootState).auth.token;
