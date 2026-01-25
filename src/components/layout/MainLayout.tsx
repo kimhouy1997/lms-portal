@@ -10,6 +10,7 @@ import {
   Container, 
   Stack,
   useTheme,
+  alpha,
   IconButton,
   Divider,
   Grid,
@@ -20,12 +21,20 @@ import FacebookIcon from '@mui/icons-material/Facebook';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import InstagramIcon from '@mui/icons-material/Instagram';
-import { School } from '@mui/icons-material';
+import { 
+  Home,
+  School, 
+  Info, 
+  Menu as MenuIcon 
+} from '@mui/icons-material';
+import { useState } from 'react';
+import MobileMenu from '@/components/layout/MobileMenu';
 
 const MainLayout = () => {
   const { t, i18n } = useTranslation();
   const [, setSearchParams] = useSearchParams();
   const theme = useTheme();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const toggleLanguage = () => {
     const newLang = i18n.language.startsWith('en') ? 'kh' : 'en';
@@ -34,9 +43,9 @@ const MainLayout = () => {
   };
 
   const navItems = [
-    { label: t('nav.home'), path: '/' },
-    { label: t('nav.courses'), path: '/courses' },
-    { label: t('nav.about'), path: '/about' },
+    { label: t('nav.home'), path: '/', icon: <Home /> },
+    { label: t('nav.courses'), path: '/courses', icon: <School /> },
+    { label: t('nav.about'), path: '/about', icon: <Info /> },
   ];
 
   return (
@@ -115,10 +124,30 @@ const MainLayout = () => {
               >
                 Sign In
               </Button>
+
+              <IconButton 
+                onClick={() => setIsMobileMenuOpen(true)}
+                sx={{ 
+                  display: { xs: 'flex', md: 'none' },
+                  color: 'text.primary',
+                  bgcolor: alpha(theme.palette.primary.main, 0.1),
+                  '&:hover': { bgcolor: alpha(theme.palette.primary.main, 0.2) }
+                }}
+              >
+                <MenuIcon />
+              </IconButton>
             </Stack>
           </Toolbar>
         </Container>
       </AppBar>
+
+      <MobileMenu 
+        isOpen={isMobileMenuOpen}
+        onClose={() => setIsMobileMenuOpen(false)}
+        navItems={navItems}
+        onToggleLanguage={toggleLanguage}
+        languageLabel={t('switch_language')}
+      />
       
       <Box component="main" sx={{ flexGrow: 1 }}>
         <Outlet />

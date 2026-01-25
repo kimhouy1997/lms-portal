@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { Typography, Button, Box, Container, Grid, Paper, Stack, useTheme } from '@mui/material';
 import { motion } from 'framer-motion';
 import { RocketLaunch, School, TrendingUp, Stars, People } from '@mui/icons-material';
-import CourseCard from '../components/cards/CourseCard';
+import CourseCard from '../../components/cards/CourseCard';
 
 const MotionBox = motion(Box);
 const MotionTypography = motion(Typography);
