@@ -7,6 +7,8 @@ interface CourseCardProps {
   students: number;
   duration: string;
   category: string;
+  isNew?: boolean;
+  isBestseller?: boolean;
 }
 
 export type {

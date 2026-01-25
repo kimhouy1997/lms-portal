@@ -6,7 +6,7 @@ const themeOptions: ThemeOptions = {
   palette,
   typography,
   shape: {
-    borderRadius: 12,
+    borderRadius: 3,
   },
   components: {
     MuiButton: {

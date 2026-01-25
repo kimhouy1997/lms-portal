@@ -1,11 +1,11 @@
 import { Card, CardContent, CardMedia, Typography, Box, Chip, Rating, Button } from '@mui/material';
 import { motion } from 'framer-motion';
 import { AccessTime, People } from '@mui/icons-material';
-import { type CourseCardProps } from '../../types/course.type';
+import type { CourseCardProps } from '@/types/course.type';
 
 const MotionCard = motion(Card);
 
-const CourseCard = ({ title, instructor, image, price, rating, students, duration, category }: CourseCardProps) => {
+const CourseCard = ({ title, instructor, image, price, rating, students, duration, category, isNew, isBestseller }: CourseCardProps) => {
   return (
     <MotionCard
       whileHover={{ y: -10, transition: { duration: 0.3 } }}
@@ -43,6 +43,21 @@ const CourseCard = ({ title, instructor, image, price, rating, students, duratio
             fontWeight: 600,
           }}
         />
+        {(isNew || isBestseller) && (
+          <Chip
+            label={isBestseller ? "Bestseller" : "New"}
+            size="small"
+            sx={{
+              position: 'absolute',
+              top: 16,
+              right: 16,
+              bgcolor: isBestseller ? '#ff9800' : '#4caf50',
+              color: 'white',
+              fontWeight: 700,
+              boxShadow: '0 4px 12px rgba(0,0,0,0.2)'
+            }}
+          />
+        )}
       </Box>
       <CardContent sx={{ flexGrow: 1, p: 3 }}>
         <Typography variant="h6" gutterBottom sx={{ fontWeight: 700, minHeight: '3.5rem' }}>
