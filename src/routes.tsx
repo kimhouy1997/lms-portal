@@ -11,6 +11,7 @@ import Register from "./pages/public/Register";
 import { ROUTES } from "./constant/routers";
 import { AuthGuard } from "./utils/auth/AuthGuard";
 import { RoleGuard } from "./utils/auth/RoleGuard";
+import { Forbidden, NotFound } from "./pages/errors";
 
 const routes: RouteObject[] = [
   // ===== PUBLIC =====
@@ -101,6 +102,9 @@ const routes: RouteObject[] = [
         },
   ],
 },
+  // ===== ERRORS =====
+  { path: "/403", element: <Forbidden /> },
+  { path: "*", element: <NotFound /> },
 ];
 
 export const router = createBrowserRouter(routes);
