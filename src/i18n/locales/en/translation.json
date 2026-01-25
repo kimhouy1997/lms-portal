@@ -1,0 +1,20 @@
+{
+  "welcome": "Welcome to LMS Portal",
+  "subtitle": "Modern Learning Management System built with Vite + React",
+  "interactions": "Interactions: {{count}}",
+  "edit_instruction": "Edit <1>src/App.tsx</1> to start building your premium LMS experience.",
+  "powered_by": "Powered by cutting-edge web technologies",
+  "switch_language": "Khmer",
+  "nav": {
+    "home": "Home",
+    "about": "About"
+  },
+  "home": {
+    "title": "Welcome to LMS Portal",
+    "subtitle": "Your journey to excellence starts here."
+  },
+  "about": {
+    "title": "About Us",
+    "description": "We are dedicated to providing the best learning experience through modern technology."
+  }
+}
