@@ -25,21 +25,31 @@ import {
   Home,
   School, 
   Info, 
-  Menu as MenuIcon 
+  Menu as MenuIcon,
+  LightMode,
+  DarkMode
 } from '@mui/icons-material';
 import { useState } from 'react';
 import MobileMenu from '@/components/layout/MobileMenu';
+import { useAppDispatch, useAppSelector } from '@/redux/hooks';
+import { setThemeMode } from '@/redux/slices/appSlice';
 
 const MainLayout = () => {
   const { t, i18n } = useTranslation();
   const [, setSearchParams] = useSearchParams();
   const theme = useTheme();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const dispatch = useAppDispatch();
+  const themeMode = useAppSelector((state) => state.app.themeMode);
 
   const toggleLanguage = () => {
     const newLang = i18n.language.startsWith('en') ? 'kh' : 'en';
     i18n.changeLanguage(newLang);
     setSearchParams({ lng: newLang });
+  };
+
+  const toggleTheme = () => {
+    dispatch(setThemeMode(themeMode === 'light' ? 'dark' : 'light'));
   };
 
   const navItems = [
@@ -51,7 +61,7 @@ const MainLayout = () => {
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', bgcolor: 'background.default' }}>
       <AppBar position="sticky" elevation={0} sx={{ 
-        backgroundColor: 'rgba(5, 5, 5, 0.8)', 
+        backgroundColor: theme.palette.mode === 'dark' ? 'rgba(5, 5, 5, 0.8)' : 'rgba(255, 255, 255, 0.8)', 
         backdropFilter: 'blur(12px)',
         borderBottom: `1px solid ${theme.palette.divider}`,
         zIndex: 1100
@@ -63,7 +73,7 @@ const MainLayout = () => {
                 <School sx={{ color: 'primary.main', fontSize: 32 }} />
                 <Typography variant="h6" sx={{ 
                   fontWeight: 800, 
-                  background: `linear-gradient(to right, #fff, ${theme.palette.primary.main})`,
+                  background: `linear-gradient(to right, ${theme.palette.mode === 'dark' ? '#fff' : '#000'}, ${theme.palette.primary.main})`,
                   WebkitBackgroundClip: 'text',
                   WebkitTextFillColor: 'transparent',
                   letterSpacing: '-0.5px'
@@ -93,6 +103,19 @@ const MainLayout = () => {
             </Stack>
 
             <Stack direction="row" spacing={2} alignItems="center">
+              <IconButton
+                onClick={toggleTheme}
+                sx={{
+                  color: 'text.primary',
+                  border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+                  borderRadius: 3,
+                  p: 1,
+                  display: { xs: 'none', sm: 'flex' }
+                }}
+              >
+                {themeMode === 'light' ? <DarkMode fontSize="small" /> : <LightMode fontSize="small" />}
+              </IconButton>
+
               <Button 
                 variant="outlined" 
                 size="medium"
