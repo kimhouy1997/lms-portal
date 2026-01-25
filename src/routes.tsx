@@ -5,6 +5,8 @@ import About from "./pages/About";
 import Courses from "./pages/Courses";
 import Pricing from "./pages/Pricing";
 import CourseDetail from "./pages/CourseDetail";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
 import { ROUTES } from "./constant/routers";
 
 const routes: RouteObject[] = [
@@ -21,16 +23,20 @@ const routes: RouteObject[] = [
                 element: <Courses />,
             },
             {
-                path: ROUTES['pricing'],
-                element: <Pricing />,
-            },
-            {
                 path: ROUTES['about'],
                 element: <About />,
             },
             {
                 path: `${ROUTES['courses']}/:id`,
                 element: <CourseDetail />,
+            },
+            {
+                path: ROUTES['login'],
+                element: <Login />,
+            },
+            {
+                path: ROUTES['register'],
+                element: <Register />,
             },
         ],
     },

@@ -4,6 +4,8 @@
     pricing: 'pricing',
     about: 'about',
     courseDetail: 'courses/:id',
+    login: 'login',
+    register: 'register',
 }
 
 export {

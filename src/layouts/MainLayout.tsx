@@ -1,4 +1,5 @@
 import { NavLink, Outlet, useSearchParams } from 'react-router-dom';
+import { ROUTES } from '@/constant/routers';
 import { useTranslation } from 'react-i18next';
 import { 
   AppBar, 
@@ -35,7 +36,6 @@ const MainLayout = () => {
   const navItems = [
     { label: t('nav.home'), path: '/' },
     { label: t('nav.courses'), path: '/courses' },
-    { label: t('nav.pricing'), path: '/pricing' },
     { label: t('nav.about'), path: '/about' },
   ];
 
@@ -105,6 +105,8 @@ const MainLayout = () => {
               </Button>
               <Button 
                 variant="contained" 
+                component={NavLink}
+                to={`/${ROUTES.login}`}
                 sx={{ 
                   borderRadius: '10px', 
                   fontWeight: 700,
