@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import envs from '@/env.config';
-import type { UserInterface,AuthResponse, LoginRequest, RegisterRequest, RefreshRequest, ForgotPasswordRequest, ResetPasswordRequest } from '@/types/user.type';
+import type { UserInterface,AuthResponse, LoginRequest, RegisterRequest, RefreshRequest, ForgotPasswordRequest, ResetPasswordRequest, ConfirmRegisterRequest } from '@/types/user.type';
 
 export const authApi = createApi({
   reducerPath: 'authApi',
@@ -65,6 +65,13 @@ export const authApi = createApi({
             method: 'POST',
             body: data
         })
+    }),
+    confirmRegister: builder.mutation<void, ConfirmRegisterRequest>({
+        query: (data) => ({
+            url: '/confirm-register',
+            method: 'POST',
+            body: data
+        })
     })
   }),
 });
@@ -76,5 +83,6 @@ export const {
   useLogoutMutation,
   useGetMeQuery,
   useForgotPasswordMutation,
-  useResetPasswordMutation
+  useResetPasswordMutation,
+  useConfirmRegisterMutation
 } = authApi;

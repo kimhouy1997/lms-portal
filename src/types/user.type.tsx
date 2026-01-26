@@ -36,9 +36,14 @@ interface ForgotPasswordRequest {
 }
 
 interface ResetPasswordRequest {
-    email: string;
-    otp: string; // or token
+    uid: string;
+    token: string;
     newPassword: string;
+}
+
+interface ConfirmRegisterRequest {
+    uid: string;
+    token: string;
 }
 
 export type {
@@ -49,4 +54,5 @@ export type {
     RefreshRequest,
     ForgotPasswordRequest,
     ResetPasswordRequest,
+    ConfirmRegisterRequest
 }

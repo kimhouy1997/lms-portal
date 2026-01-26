@@ -1,18 +1,19 @@
 import { createBrowserRouter, type RouteObject } from "react-router-dom";
-import MainLayout from "./components/layout/MainLayout";
+import MainLayout from "@components/layout/MainLayout";
 
-import Home from "./pages/public/Home";
-import About from "./pages/public/About";
-import Courses from "./pages/public/Courses";
-import CourseDetail from "./pages/public/CourseDetail";
-import Login from "./pages/public/Login";
-import Register from "./pages/public/Register";
-import { ForgotPassword } from "./pages/public/ForgotPassword";
+import Home from "@pages/public/Home";
+import About from "@pages/public/About";
+import Courses from "@pages/public/Courses";
+import CourseDetail from "@pages/public/CourseDetail";
+import Login from "@pages/public/Login";
+import Register from "@pages/public/Register";
+import { ForgotPassword } from "@pages/public/ForgotPassword";
 
-import { ROUTES } from "./constant/routers";
 import { AuthGuard } from "./utils/auth/AuthGuard";
 import { RoleGuard } from "./utils/auth/RoleGuard";
-import { Forbidden, NotFound } from "./pages/errors";
+import { Forbidden, NotFound } from "@pages/errors";
+import ConfirmRegister from "@pages/public/ConfirmRegister";
+import { ROUTES } from "./constant/routers";
 
 const routes: RouteObject[] = [
   // ===== PUBLIC =====
@@ -27,6 +28,7 @@ const routes: RouteObject[] = [
       { path: ROUTES.login, element: <Login /> },
       { path: ROUTES.register, element: <Register /> },
       { path: ROUTES.forgotPassword, element: <ForgotPassword /> },
+      { path: `${ROUTES.confirmRegister}/:uid/:token`, element: <ConfirmRegister />}
     ],
   },
 

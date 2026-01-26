@@ -3,7 +3,7 @@ import path from 'path';
 import react from '@vitejs/plugin-react'
 
 // https://vite.dev/config/
-const PORT = 3039;
+const PORT = 3000;
 
 export default defineConfig({
   plugins: [

@@ -7,6 +7,7 @@
     login: 'login',
     register: 'register',
     forgotPassword: 'forgot-password',
+    confirmRegister:'confirm-register', 
     student:{
         index: 'student',
         dashboard: 'student/dashboard',

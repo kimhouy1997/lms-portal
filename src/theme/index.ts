@@ -13,7 +13,7 @@ const getTheme = (mode: PaletteMode) => {
       MuiButton: {
         styleOverrides: {
           root: {
-            borderRadius: 12,
+            borderRadius: 3,
             padding: '8px 24px',
             transition: 'all 0.3s ease',
             textTransform: 'none',
