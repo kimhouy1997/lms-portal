@@ -3,11 +3,13 @@ import { setupListeners } from '@reduxjs/toolkit/query';
 import { authApi } from './api/authApi';
 import { instituteApi } from './api/instituteApi';
 import appReducer from './slices/appSlice';
+import authReducer from './slices/authSlice';
 
 export const store = configureStore({
   reducer: {
     // Standard slices
     app: appReducer,
+    auth: authReducer,
     
     // RTK Query API
     [authApi.reducerPath]: authApi.reducer,

@@ -1,26 +1,26 @@
-import { 
-  Box, 
-  Container, 
-  Typography, 
-  TextField, 
-  Button, 
-  Paper, 
-  Stack, 
-  Link, 
-  IconButton, 
-  InputAdornment, 
-  alpha, 
+import {
+  Box,
+  Container,
+  Typography,
+  TextField,
+  Button,
+  Paper,
+  Stack,
+  Link,
+  IconButton,
+  InputAdornment,
+  alpha,
   useTheme,
   Divider
 } from '@mui/material';
-import { 
-  Email, 
-  Lock, 
-  Visibility, 
-  VisibilityOff, 
-  ArrowBack,
+import {
+  Email,
+  Lock,
+  Visibility,
+  VisibilityOff,
   Google
 } from '@mui/icons-material';
+import Logo from '@/components/common/Logo';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -28,12 +28,14 @@ import * as z from 'zod';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ROUTES } from '@/constant/routers';
-import { useLoginMutation } from '@root/src/redux/api/authApi';
+import { useLoginMutation } from '@/redux/api/authApi';
 import { showToast } from '@/utils/toast';
+import { useAppDispatch } from '@/redux/hooks';
+import { setCredentials } from '@/redux/slices/authSlice';
 
 const loginSchema = z.object({
   email: z.string().email('Invalid email address'),
-  password: z.string().min(6, 'Password must be at least 6 characters'),
+  password: z.string().min(1, 'Password must be at least 1 character'),
 });
 
 type LoginForm = z.infer<typeof loginSchema>;
@@ -41,6 +43,7 @@ type LoginForm = z.infer<typeof loginSchema>;
 const Login = () => {
   const theme = useTheme();
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const [showPassword, setShowPassword] = useState(false);
 
   const {
@@ -55,7 +58,12 @@ const Login = () => {
 
   const onSubmit = async (data: LoginForm) => {
     try {
-      await login(data).unwrap();
+      const response = await login({
+        username: data.email,
+        password: data.password
+      }).unwrap();
+
+      dispatch(setCredentials(response));
       showToast.success('Login successful! Welcome back.');
       navigate(ROUTES.home);
     } catch (error: any) {
@@ -65,10 +73,10 @@ const Login = () => {
   };
 
   return (
-    <Box sx={{ 
-      minHeight: '100vh', 
-      display: 'flex', 
-      alignItems: 'center', 
+    <Box sx={{
+      minHeight: '100vh',
+      display: 'flex',
+      alignItems: 'center',
       justifyContent: 'center',
       bgcolor: 'background.default',
       position: 'relative',
@@ -105,11 +113,11 @@ const Login = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <Paper 
+          <Paper
             elevation={0}
-            sx={{ 
-              p: { xs: 4, sm: 6 }, 
-              borderRadius: 6, 
+            sx={{
+              p: { xs: 4, sm: 6 },
+              borderRadius: 6,
               bgcolor: alpha(theme.palette.background.paper, 0.8),
               backdropFilter: 'blur(20px)',
               border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
@@ -117,13 +125,7 @@ const Login = () => {
             }}
           >
             <Box sx={{ mb: 4, textAlign: 'center' }}>
-              <IconButton 
-                component={RouterLink} 
-                to={ROUTES.home} 
-                sx={{ mb: 2, bgcolor: alpha(theme.palette.primary.main, 0.1) }}
-              >
-                <ArrowBack color="primary" />
-              </IconButton>
+              <Logo sx={{ mb: 3 }} fontSize="2rem" iconSize={40} />
               <Typography variant="h4" sx={{ fontWeight: 800, mb: 1 }}>
                 Welcome Back
               </Typography>
@@ -148,7 +150,7 @@ const Login = () => {
                       </InputAdornment>
                     ),
                   }}
-                  sx={{ 
+                  sx={{
                     '& .MuiOutlinedInput-root': { borderRadius: 3 }
                   }}
                 />
@@ -179,16 +181,16 @@ const Login = () => {
                       </InputAdornment>
                     ),
                   }}
-                  sx={{ 
+                  sx={{
                     '& .MuiOutlinedInput-root': { borderRadius: 3 }
                   }}
                 />
 
                 <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                  <Link 
-                    component={RouterLink} 
-                    to={`/${ROUTES.forgotPassword}`} 
-                    variant="body2" 
+                  <Link
+                    component={RouterLink}
+                    to={`/${ROUTES.forgotPassword}`}
+                    variant="body2"
                     sx={{ fontWeight: 600, color: 'primary.main', textDecoration: 'none' }}
                   >
                     Forgot password?
@@ -202,10 +204,10 @@ const Login = () => {
                   type="submit"
                   variant="contained"
                   disabled={isSubmitting}
-                  sx={{ 
-                    py: 2, 
-                    borderRadius: 3, 
-                    fontSize: '1rem', 
+                  sx={{
+                    py: 2,
+                    borderRadius: 3,
+                    fontSize: '1rem',
                     fontWeight: 700,
                     textTransform: 'none',
                     boxShadow: `0 8px 25px ${alpha(theme.palette.primary.main, 0.3)}`
@@ -228,10 +230,10 @@ const Login = () => {
                   variant="outlined"
                   startIcon={<Google />}
                   onClick={() => console.log('Google login')}
-                  sx={{ 
-                    py: 1.5, 
-                    borderRadius: 3, 
-                    fontSize: '0.95rem', 
+                  sx={{
+                    py: 1.5,
+                    borderRadius: 3,
+                    fontSize: '0.95rem',
                     fontWeight: 600,
                     textTransform: 'none',
                     borderColor: alpha(theme.palette.divider, 0.2),
@@ -247,8 +249,8 @@ const Login = () => {
 
                 <Typography variant="body2" sx={{ textAlign: 'center', mt: 2 }}>
                   Don't have an account?{' '}
-                  <Link 
-                    component={RouterLink} 
+                  <Link
+                    component={RouterLink}
                     to={`/${ROUTES.register}`}
                     sx={{ fontWeight: 700, color: 'primary.main', textDecoration: 'none' }}
                   >

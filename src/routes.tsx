@@ -19,6 +19,21 @@ import Institute from "./pages/admin/Institute";
 import { StudentLayout, TeacherLayout, AdminLayout } from "@components/layout/RoleLayouts";
 
 const routes: RouteObject[] = [
+
+  // ===== PUBLIC AUTH =====
+  {
+    path: ROUTES.login,
+    element: <Login />,
+  },
+  {
+    path: ROUTES.register,
+    element: <Register />,
+  },
+  {
+    path: ROUTES.forgotPassword,
+    element: <ForgotPassword />,
+  },
+
   // ===== PUBLIC =====
   {
     path: ROUTES.home,
@@ -28,9 +43,6 @@ const routes: RouteObject[] = [
       { path: ROUTES.courses, element: <Courses /> },
       { path: `${ROUTES.courses}/:id`, element: <CourseDetail /> },
       { path: ROUTES.about, element: <About /> },
-      { path: ROUTES.login, element: <Login /> },
-      { path: ROUTES.register, element: <Register /> },
-      { path: ROUTES.forgotPassword, element: <ForgotPassword /> },
       { path: `${ROUTES.confirmRegister}/:uid/:token`, element: <ConfirmRegister /> }
     ],
   },

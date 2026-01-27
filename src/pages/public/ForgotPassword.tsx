@@ -1,21 +1,21 @@
-import { 
-  Box, 
-  Container, 
-  Typography, 
-  TextField, 
-  Button, 
-  Paper, 
-  Stack, 
-  IconButton, 
-  InputAdornment, 
-  alpha, 
-  useTheme 
+import {
+  Box,
+  Container,
+  Typography,
+  TextField,
+  Button,
+  Paper,
+  Stack,
+  IconButton,
+  InputAdornment,
+  alpha,
+  useTheme
 } from '@mui/material';
-import { 
-  Email, 
-  ArrowBack,
+import {
+  Email,
   MarkEmailRead
 } from '@mui/icons-material';
+import Logo from '@/components/common/Logo';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -33,7 +33,7 @@ type ForgotPasswordForm = z.infer<typeof forgotPasswordSchema>;
 
 export const ForgotPassword = () => {
   const theme = useTheme();
-  
+
   const {
     register,
     handleSubmit,
@@ -55,10 +55,10 @@ export const ForgotPassword = () => {
   };
 
   return (
-    <Box sx={{ 
-      minHeight: '100vh', 
-      display: 'flex', 
-      alignItems: 'center', 
+    <Box sx={{
+      minHeight: '100vh',
+      display: 'flex',
+      alignItems: 'center',
       justifyContent: 'center',
       bgcolor: 'background.default',
       position: 'relative',
@@ -95,11 +95,11 @@ export const ForgotPassword = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <Paper 
+          <Paper
             elevation={0}
-            sx={{ 
-              p: { xs: 4, sm: 6 }, 
-              borderRadius: 6, 
+            sx={{
+              p: { xs: 4, sm: 6 },
+              borderRadius: 6,
               bgcolor: alpha(theme.palette.background.paper, 0.8),
               backdropFilter: 'blur(20px)',
               border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
@@ -137,7 +137,7 @@ export const ForgotPassword = () => {
                   If an account exists for that email, we have sent password reset instructions.
                   Please check your inbox and spam folder.
                 </Typography>
-                
+
                 <Button
                   component={RouterLink}
                   to={`/${ROUTES.login}`}
@@ -158,13 +158,7 @@ export const ForgotPassword = () => {
             ) : (
               <>
                 <Box sx={{ mb: 4, textAlign: 'center' }}>
-                  <IconButton 
-                    component={RouterLink} 
-                    to={`/${ROUTES.login}`} 
-                    sx={{ mb: 2, bgcolor: alpha(theme.palette.primary.main, 0.1) }}
-                  >
-                    <ArrowBack color="primary" />
-                  </IconButton>
+                  <Logo sx={{ mb: 3 }} fontSize="2rem" iconSize={40} />
                   <Typography variant="h4" sx={{ fontWeight: 800, mb: 1 }}>
                     Forgot Password
                   </Typography>
@@ -189,7 +183,7 @@ export const ForgotPassword = () => {
                           </InputAdornment>
                         ),
                       }}
-                      sx={{ 
+                      sx={{
                         '& .MuiOutlinedInput-root': { borderRadius: 3 }
                       }}
                     />
@@ -200,10 +194,10 @@ export const ForgotPassword = () => {
                       type="submit"
                       variant="contained"
                       disabled={isLoading}
-                      sx={{ 
-                        py: 2, 
-                        borderRadius: 3, 
-                        fontSize: '1rem', 
+                      sx={{
+                        py: 2,
+                        borderRadius: 3,
+                        fontSize: '1rem',
                         fontWeight: 700,
                         textTransform: 'none',
                         boxShadow: `0 8px 25px ${alpha(theme.palette.primary.main, 0.3)}`
@@ -211,15 +205,15 @@ export const ForgotPassword = () => {
                     >
                       {isLoading ? 'Sending...' : 'Send Reset Link'}
                     </Button>
-                    
+
                     <Typography variant="body2" sx={{ textAlign: 'center', mt: 2 }}>
                       Remember your password?{' '}
-                      <Typography 
-                        component={RouterLink} 
+                      <Typography
+                        component={RouterLink}
                         to={`/${ROUTES.login}`}
-                        sx={{ 
-                          fontWeight: 700, 
-                          color: 'primary.main', 
+                        sx={{
+                          fontWeight: 700,
+                          color: 'primary.main',
                           textDecoration: 'none',
                           '&:hover': { textDecoration: 'underline' }
                         }}

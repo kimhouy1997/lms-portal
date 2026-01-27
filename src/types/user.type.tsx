@@ -1,21 +1,27 @@
-interface UserInterface{
-    id: string;
-    firstName:string;
-    lastName:string;
-    email: string;
-    role: "student" | "teacher" | "assistant" | "admin";
-    avatar?: string;
+interface UserInterface {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  role: "student" | "teacher" | "assistant" | "admin";
+  avatar?: string;
 }
 
 // Define types for requests and responses
 interface AuthResponse {
-  access: string;
   refresh: string;
-  user: UserInterface;
+  access: string;
+  user_id: number;
+  username: string;
+  email: string;
+  groups: string;
+  institute: string;
+  department: string;
 }
 
 interface LoginRequest {
-  email: string;
+  email?: string;
+  username: string;
   password: string;
 }
 
@@ -28,31 +34,31 @@ interface RegisterRequest {
 }
 
 interface RefreshRequest {
-    refresh: string
+  refresh: string
 }
 
 interface ForgotPasswordRequest {
-    email: string;
+  email: string;
 }
 
 interface ResetPasswordRequest {
-    uid: string;
-    token: string;
-    newPassword: string;
+  uid: string;
+  token: string;
+  newPassword: string;
 }
 
 interface ConfirmRegisterRequest {
-    uid: string;
-    token: string;
+  uid: string;
+  token: string;
 }
 
 export type {
-    UserInterface,
-    AuthResponse,
-    LoginRequest,
-    RegisterRequest,
-    RefreshRequest,
-    ForgotPasswordRequest,
-    ResetPasswordRequest,
-    ConfirmRegisterRequest
+  UserInterface,
+  AuthResponse,
+  LoginRequest,
+  RegisterRequest,
+  RefreshRequest,
+  ForgotPasswordRequest,
+  ResetPasswordRequest,
+  ConfirmRegisterRequest
 }

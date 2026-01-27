@@ -1,31 +1,31 @@
-import { 
-  Box, 
-  Container, 
-  Typography, 
-  TextField, 
-  Button, 
-  Paper, 
-  Stack, 
-  Link, 
-  IconButton, 
-  InputAdornment, 
-  alpha, 
+import {
+  Box,
+  Container,
+  Typography,
+  TextField,
+  Button,
+  Paper,
+  Stack,
+  Link,
+  IconButton,
+  InputAdornment,
+  alpha,
   useTheme,
   Grid,
   Divider
 } from '@mui/material';
-import { 
-  Email, 
-  Lock, 
-  Visibility, 
-  VisibilityOff, 
-  ArrowBack,
+import {
+  Email,
+  Lock,
+  Visibility,
+  VisibilityOff,
   Person,
   Badge,
   Google,
   MarkEmailRead,
   Login
 } from '@mui/icons-material';
+import Logo from '@/components/common/Logo';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -60,7 +60,7 @@ const Register = () => {
     resolver: zodResolver(registerSchema),
   });
 
-  const [registerApi, {isLoading, isSuccess}]= useRegisterMutation()
+  const [registerApi, { isLoading, isSuccess }] = useRegisterMutation()
 
   const onSubmit = async (data: RegisterForm) => {
     return console.log(data);
@@ -73,10 +73,10 @@ const Register = () => {
   };
 
   return (
-    <Box sx={{ 
-      minHeight: '100vh', 
-      display: 'flex', 
-      alignItems: 'center', 
+    <Box sx={{
+      minHeight: '100vh',
+      display: 'flex',
+      alignItems: 'center',
       justifyContent: 'center',
       bgcolor: 'background.default',
       position: 'relative',
@@ -113,11 +113,11 @@ const Register = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <Paper 
+          <Paper
             elevation={0}
-            sx={{ 
-              p: { xs: 4, sm: 6 }, 
-              borderRadius: 6, 
+            sx={{
+              p: { xs: 4, sm: 6 },
+              borderRadius: 6,
               bgcolor: alpha(theme.palette.background.paper, 0.8),
               backdropFilter: 'blur(20px)',
               border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
@@ -157,11 +157,11 @@ const Register = () => {
                     Registration Successful!
                   </Typography>
                   <Typography variant="body1" color="text.secondary" sx={{ mb: 4, lineHeight: 1.6 }}>
-                    Thank you for signing up. If the email address you provided belongs to you, 
-                    you will receive a verification email shortly. Please check your inbox and 
+                    Thank you for signing up. If the email address you provided belongs to you,
+                    you will receive a verification email shortly. Please check your inbox and
                     follow the instructions to activate your account.
                   </Typography>
-                  
+
                   <Button
                     component={RouterLink}
                     to={`/${ROUTES.login}`}
@@ -184,13 +184,7 @@ const Register = () => {
             ) : (
               <>
                 <Box sx={{ mb: 4, textAlign: 'center' }}>
-                  <IconButton 
-                    component={RouterLink} 
-                    to={ROUTES.home} 
-                    sx={{ mb: 2, bgcolor: alpha(theme.palette.primary.main, 0.1) }}
-                  >
-                    <ArrowBack color="primary" />
-                  </IconButton>
+                  <Logo sx={{ mb: 3 }} fontSize="2rem" iconSize={40} />
                   <Typography variant="h4" sx={{ fontWeight: 800, mb: 1 }}>
                     Create Account
                   </Typography>
@@ -310,10 +304,10 @@ const Register = () => {
                       type="submit"
                       variant="contained"
                       disabled={isLoading}
-                      sx={{ 
-                        py: 2, 
-                        borderRadius: 3, 
-                        fontSize: '1rem', 
+                      sx={{
+                        py: 2,
+                        borderRadius: 3,
+                        fontSize: '1rem',
                         fontWeight: 700,
                         textTransform: 'none',
                         boxShadow: `0 8px 25px ${alpha(theme.palette.primary.main, 0.3)}`
@@ -336,10 +330,10 @@ const Register = () => {
                       variant="outlined"
                       startIcon={<Google />}
                       onClick={() => console.log('Google register')}
-                      sx={{ 
-                        py: 1.5, 
-                        borderRadius: 3, 
-                        fontSize: '0.95rem', 
+                      sx={{
+                        py: 1.5,
+                        borderRadius: 3,
+                        fontSize: '0.95rem',
                         fontWeight: 600,
                         textTransform: 'none',
                         borderColor: alpha(theme.palette.divider, 0.2),
@@ -355,8 +349,8 @@ const Register = () => {
 
                     <Typography variant="body2" sx={{ textAlign: 'center', mt: 2 }}>
                       Already have an account?{' '}
-                      <Link 
-                        component={RouterLink} 
+                      <Link
+                        component={RouterLink}
                         to={`/${ROUTES.login}`}
                         sx={{ fontWeight: 700, color: 'primary.main', textDecoration: 'none' }}
                       >
