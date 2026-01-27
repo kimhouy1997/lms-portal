@@ -17,6 +17,7 @@ interface AuthResponse {
   groups: string;
   institute: string;
   department: string;
+  avatar?: string;
 }
 
 interface LoginRequest {

@@ -15,8 +15,11 @@ import { Forbidden, NotFound } from "@pages/errors";
 import ConfirmRegister from "@pages/public/ConfirmRegister";
 import { ROUTES } from "./constant/routers";
 import Institute from "./pages/admin/Institute";
-
 import { StudentLayout, TeacherLayout, AdminLayout } from "@components/layout/RoleLayouts";
+
+import StudentSetting from "@pages/student/Setting";
+import TeacherSetting from "@pages/teacher/Setting";
+import AdminSetting from "@pages/admin/Setting";
 
 const routes: RouteObject[] = [
 
@@ -58,12 +61,12 @@ const routes: RouteObject[] = [
           {
             element: <StudentLayout />,
             children: [
-              { index: true, element: <Home /> }, // This might not be right, maybe redirectTo dashboard
+              { index: true, element: <Home /> },
               { path: ROUTES.student.dashboard, element: <Courses /> },
               { path: ROUTES.student.courses, element: <Courses /> },
               { path: `${ROUTES.student.courses}/:id`, element: <CourseDetail /> },
-              { path: ROUTES.student.profile, element: <Login /> },
-              { path: ROUTES.student.settings, element: <Register /> },
+              { path: ROUTES.student.profile, element: <StudentSetting /> },
+              { path: ROUTES.student.settings, element: <StudentSetting /> },
             ],
           },
         ],
@@ -89,8 +92,8 @@ const routes: RouteObject[] = [
               { path: ROUTES.teacher.dashboard, element: <Courses /> },
               { path: ROUTES.teacher.courses, element: <Courses /> },
               { path: `${ROUTES.teacher.courses}/:id`, element: <CourseDetail /> },
-              { path: ROUTES.teacher.profile, element: <Login /> },
-              { path: ROUTES.teacher.settings, element: <Register /> },
+              { path: ROUTES.teacher.profile, element: <TeacherSetting /> },
+              { path: ROUTES.teacher.settings, element: <TeacherSetting /> },
             ],
           },
         ],
@@ -115,8 +118,8 @@ const routes: RouteObject[] = [
               { path: ROUTES.admin.courses, element: <Courses /> },
               { path: `${ROUTES.admin.courses}/:id`, element: <CourseDetail /> },
               { path: ROUTES.admin.institutes, element: <Institute /> },
-              { path: ROUTES.admin.profile, element: <Institute /> },
-              { path: ROUTES.admin.settings, element: <Register /> },
+              { path: ROUTES.admin.profile, element: <AdminSetting /> },
+              { path: ROUTES.admin.settings, element: <AdminSetting /> },
             ],
           },
         ],

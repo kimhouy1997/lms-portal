@@ -21,7 +21,7 @@ import {
   Google
 } from '@mui/icons-material';
 import Logo from '@/components/common/Logo';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -30,7 +30,7 @@ import { motion } from 'framer-motion';
 import { ROUTES } from '@/constant/routers';
 import { useLoginMutation } from '@/redux/api/authApi';
 import { showToast } from '@/utils/toast';
-import { useAppDispatch } from '@/redux/hooks';
+import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { setCredentials } from '@/redux/slices/authSlice';
 
 const loginSchema = z.object({
@@ -45,6 +45,14 @@ const Login = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [showPassword, setShowPassword] = useState(false);
+  const { user, isAuthenticated } = useAppSelector((state) => state.auth);
+
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      const role = user.groups?.toLowerCase() || 'student';
+      navigate(`/${role}/dashboard`);
+    }
+  }, [isAuthenticated, user, navigate]);
 
   const {
     register,
@@ -65,7 +73,8 @@ const Login = () => {
 
       dispatch(setCredentials(response));
       showToast.success('Login successful! Welcome back.');
-      navigate(ROUTES.home);
+      const role = response.groups?.toLowerCase() || 'student';
+      navigate(`/${role}/dashboard`);
     } catch (error: any) {
       const errorMessage = error?.data?.detail || error?.data?.message || 'Login failed. Please check your credentials.';
       showToast.error(errorMessage);

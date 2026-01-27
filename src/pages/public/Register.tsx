@@ -26,15 +26,16 @@ import {
   Login
 } from '@mui/icons-material';
 import Logo from '@/components/common/Logo';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ROUTES } from '@/constant/routers';
-import { useRegisterMutation } from '@root/src/redux/api/authApi';
+import { useRegisterMutation } from '@/redux/api/authApi';
 import { showToast } from '@/utils/toast';
+import { useAppSelector } from '@/redux/hooks';
 const registerSchema = z.object({
   firstName: z.string().min(3, 'First name must be at least 3 characters'),
   lastName: z.string().min(3, 'Last name must be at least 3 characters'),
@@ -50,7 +51,16 @@ type RegisterForm = z.infer<typeof registerSchema>;
 
 const Register = () => {
   const theme = useTheme();
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const { user, isAuthenticated } = useAppSelector((state) => state.auth);
+
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      const role = user.groups?.toLowerCase() || 'student';
+      navigate(`/${role}/dashboard`);
+    }
+  }, [isAuthenticated, user, navigate]);
 
   const {
     register,
