@@ -20,6 +20,7 @@ import { StudentLayout, TeacherLayout, AdminLayout } from "@components/layout/Ro
 import StudentSetting from "@pages/student/Setting";
 import TeacherSetting from "@pages/teacher/Setting";
 import AdminSetting from "@pages/admin/Setting";
+import StudentCourse from "@pages/student/StudentCourse";
 
 const routes: RouteObject[] = [
 
@@ -62,8 +63,7 @@ const routes: RouteObject[] = [
             element: <StudentLayout />,
             children: [
               { index: true, element: <Home /> },
-              { path: ROUTES.student.dashboard, element: <Courses /> },
-              { path: ROUTES.student.courses, element: <Courses /> },
+              { path: ROUTES.student.courses, element: <StudentCourse /> },
               { path: `${ROUTES.student.courses}/:id`, element: <CourseDetail /> },
               { path: ROUTES.student.profile, element: <StudentSetting /> },
               { path: ROUTES.student.settings, element: <StudentSetting /> },
@@ -72,9 +72,6 @@ const routes: RouteObject[] = [
         ],
       },
     ],
-
-
-
   },
 
   // ===== TEACHER =====
