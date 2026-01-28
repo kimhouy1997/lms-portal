@@ -20,24 +20,31 @@ import {
 } from '@mui/material';
 import {
     School,
-    Dashboard,
     Person,
     Settings,
     Logout,
     Notifications,
-    Search,
-    Book
+    Menu as MenuIcon,
+    DarkMode,
+    LightMode,
+    Language
 } from '@mui/icons-material';
 import { useState } from 'react';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { logout as logoutAction } from '@/redux/slices/authSlice';
+import { setThemeMode } from '@/redux/slices/appSlice';
+import { useTranslation } from 'react-i18next';
+import MobileMenu from '@/components/layout/MobileMenu';
 
 const StudentLayout = () => {
     const theme = useTheme();
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
+    const { t, i18n } = useTranslation();
     const { user } = useAppSelector((state) => state.auth);
+    const { themeMode } = useAppSelector((state) => state.app);
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
@@ -53,10 +60,19 @@ const StudentLayout = () => {
         navigate('/');
     };
 
+    const toggleTheme = () => {
+        dispatch(setThemeMode(themeMode === 'light' ? 'dark' : 'light'));
+    };
+
+    const toggleLanguage = () => {
+        const newLang = i18n.language === 'en' ? 'kh' : 'en';
+        i18n.changeLanguage(newLang);
+    };
+
     const navItems = [
-        { label: 'Dashboard', path: '/student/dashboard', icon: <Dashboard /> },
-        { label: 'My Courses', path: '/student/courses', icon: <Book /> },
-        { label: 'Browse', path: '/courses', icon: <Search /> },
+        { label: t('nav.home'), path: '/', icon: <Settings /> }, // Icon placeholder
+        { label: t('nav.myCourses'), path: '/student/courses', icon: <Notifications /> }, // Icon placeholder
+        { label: t('nav.about'), path: '/about', icon: <Settings /> }, // Icon placeholder
     ];
 
     return (
@@ -70,7 +86,7 @@ const StudentLayout = () => {
             }}>
                 <Container maxWidth="xl">
                     <Toolbar disableGutters sx={{ justifyContent: 'space-between', height: 70 }}>
-                        {/* Left Score: Logo & Main Nav */}
+                        {/* Left Side: Logo & Main Nav */}
                         <Stack direction="row" spacing={4} alignItems="center">
                             <Box component={NavLink} to="/" sx={{ display: 'flex', alignItems: 'center', gap: 1.5, textDecoration: 'none' }}>
                                 <School sx={{ color: 'primary.main', fontSize: 32 }} />
@@ -91,7 +107,6 @@ const StudentLayout = () => {
                                         key={item.label}
                                         component={NavLink}
                                         to={item.path}
-                                        startIcon={item.icon}
                                         sx={{
                                             color: 'text.secondary',
                                             fontWeight: 600,
@@ -111,7 +126,16 @@ const StudentLayout = () => {
                         </Stack>
 
                         {/* Right Side: Actions & Profile */}
-                        <Stack direction="row" spacing={1.5} alignItems="center">
+                        <Stack direction="row" spacing={1} alignItems="center">
+                            <Box sx={{ display: { xs: 'none', sm: 'flex' }, alignItems: 'center', gap: 1 }}>
+                                <IconButton onClick={toggleTheme} color="inherit" sx={{ bgcolor: alpha(theme.palette.divider, 0.05) }}>
+                                    {themeMode === 'dark' ? <LightMode fontSize="small" /> : <DarkMode fontSize="small" />}
+                                </IconButton>
+                                <IconButton onClick={toggleLanguage} color="inherit" sx={{ bgcolor: alpha(theme.palette.divider, 0.05) }}>
+                                    <Language fontSize="small" />
+                                </IconButton>
+                            </Box>
+
                             <IconButton size="small">
                                 <Badge badgeContent={3} color="primary">
                                     <Notifications fontSize="small" />
@@ -143,10 +167,26 @@ const StudentLayout = () => {
                                     </Avatar>
                                 </IconButton>
                             </Tooltip>
+
+                            <IconButton
+                                color="inherit"
+                                onClick={() => setIsMobileMenuOpen(true)}
+                                sx={{ display: { xs: 'flex', md: 'none' }, bgcolor: alpha(theme.palette.divider, 0.05) }}
+                            >
+                                <MenuIcon />
+                            </IconButton>
                         </Stack>
                     </Toolbar>
                 </Container>
             </AppBar>
+
+            <MobileMenu
+                isOpen={isMobileMenuOpen}
+                onClose={() => setIsMobileMenuOpen(false)}
+                navItems={navItems}
+                onToggleLanguage={toggleLanguage}
+                languageLabel={i18n.language === 'en' ? 'ភាសាខ្មែរ' : 'English'}
+            />
 
             <Box component="main" sx={{ flexGrow: 1, py: 4 }}>
                 <Container maxWidth="xl">

@@ -36,8 +36,11 @@ import {
     Search,
     School
 } from '@mui/icons-material';
+import { DarkMode, LightMode, Language as LanguageIcon } from '@mui/icons-material';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { logout as logoutAction } from '@/redux/slices/authSlice';
+import { setThemeMode } from '@/redux/slices/appSlice';
+import { useTranslation } from 'react-i18next';
 
 const drawerWidth = 280;
 
@@ -46,7 +49,9 @@ const AdminLayout = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
+    const { i18n } = useTranslation();
     const { user } = useAppSelector((state) => state.auth);
+    const { themeMode } = useAppSelector((state) => state.app);
 
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
@@ -58,6 +63,9 @@ const AdminLayout = () => {
         handleMenuClose();
         navigate('/login');
     };
+
+    const toggleTheme = () => dispatch(setThemeMode(themeMode === 'light' ? 'dark' : 'light'));
+    const toggleLanguage = () => i18n.changeLanguage(i18n.language === 'en' ? 'kh' : 'en');
 
     const menuSections = [
         {
@@ -136,6 +144,14 @@ const AdminLayout = () => {
             <Divider sx={{ bgcolor: 'grey.800', mx: 2 }} />
 
             <Box sx={{ p: 3 }}>
+                <Stack direction="row" spacing={1} justifyContent="center" sx={{ mb: 2 }}>
+                    <IconButton size="small" onClick={toggleTheme} sx={{ color: 'grey.400', bgcolor: 'grey.800', '&:hover': { bgcolor: 'grey.700' } }}>
+                        {themeMode === 'dark' ? <LightMode fontSize="small" /> : <DarkMode fontSize="small" />}
+                    </IconButton>
+                    <IconButton size="small" onClick={toggleLanguage} sx={{ color: 'grey.400', bgcolor: 'grey.800', '&:hover': { bgcolor: 'grey.700' } }}>
+                        <LanguageIcon fontSize="small" />
+                    </IconButton>
+                </Stack>
                 <Stack direction="row" spacing={2} alignItems="center" sx={{ p: 2, bgcolor: 'grey.800', borderRadius: 3 }}>
                     <Avatar sx={{ width: 36, height: 36, bgcolor: 'primary.main' }}>
                         {user?.username?.charAt(0).toUpperCase()}
@@ -150,14 +166,15 @@ const AdminLayout = () => {
     );
 
     return (
-        <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: 'grey.50' }}>
+        <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: 'background.default' }}>
             <AppBar
                 position="fixed"
                 elevation={0}
                 sx={{
                     width: { sm: `calc(100% - ${drawerWidth}px)` },
                     ml: { sm: `${drawerWidth}px` },
-                    bgcolor: 'white',
+                    bgcolor: alpha(theme.palette.background.paper, 0.8),
+                    backdropFilter: 'blur(10px)',
                     borderBottom: `1px solid ${theme.palette.divider}`,
                     color: 'text.primary'
                 }}
@@ -167,19 +184,24 @@ const AdminLayout = () => {
                         <Box sx={{
                             display: 'flex',
                             alignItems: 'center',
-                            bgcolor: 'grey.100',
+                            bgcolor: alpha(theme.palette.divider, 0.05),
                             px: 2,
                             py: 0.8,
                             borderRadius: 2,
                             width: '100%',
                             maxWidth: 400
                         }}>
-                            <Search fontSize="small" sx={{ color: 'grey.500', mr: 1 }} />
-                            <Typography variant="body2" sx={{ color: 'grey.500' }}>Search for something...</Typography>
+                            <Search fontSize="small" sx={{ color: 'text.secondary', mr: 1 }} />
+                            <Typography variant="body2" sx={{ color: 'text.secondary' }}>Search for something...</Typography>
                         </Box>
                     </Stack>
 
                     <Stack direction="row" spacing={2} alignItems="center">
+                        <Box sx={{ display: { xs: 'none', sm: 'flex' }, gap: 1 }}>
+                            <IconButton size="small" onClick={toggleTheme} sx={{ bgcolor: alpha(theme.palette.divider, 0.05) }}>
+                                {themeMode === 'dark' ? <LightMode fontSize="small" /> : <DarkMode fontSize="small" />}
+                            </IconButton>
+                        </Box>
                         <IconButton><Badge badgeContent={8} color="error"><Notifications /></Badge></IconButton>
                         <IconButton onClick={handleMenuOpen} size="small">
                             <Avatar sx={{ width: 32, height: 32, bgcolor: 'primary.main' }}>

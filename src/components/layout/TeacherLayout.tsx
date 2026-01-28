@@ -33,8 +33,11 @@ import {
     Notifications,
     People
 } from '@mui/icons-material';
+import { DarkMode, LightMode, Language as LanguageIcon } from '@mui/icons-material';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { logout as logoutAction } from '@/redux/slices/authSlice';
+import { setThemeMode } from '@/redux/slices/appSlice';
+import { useTranslation } from 'react-i18next';
 
 const drawerWidth = 280;
 
@@ -44,7 +47,9 @@ const TeacherLayout = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
+    const { i18n } = useTranslation();
     const { user } = useAppSelector((state) => state.auth);
+    const { themeMode } = useAppSelector((state) => state.app);
 
     const [open, setOpen] = useState(!isMobile);
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -58,6 +63,9 @@ const TeacherLayout = () => {
         handleMenuClose();
         navigate('/login');
     };
+
+    const toggleTheme = () => dispatch(setThemeMode(themeMode === 'light' ? 'dark' : 'light'));
+    const toggleLanguage = () => i18n.changeLanguage(i18n.language === 'en' ? 'kh' : 'en');
 
     const menuItems = [
         { title: 'Overview', path: '/teacher/dashboard', icon: <Dashboard /> },
@@ -106,7 +114,15 @@ const TeacherLayout = () => {
                 })}
             </List>
 
-            <Box sx={{ p: 2 }}>
+            <Box sx={{ p: 2, mt: 'auto' }}>
+                <Stack direction="row" spacing={1} justifyContent="center" sx={{ mb: 2 }}>
+                    <IconButton size="small" onClick={toggleTheme} sx={{ bgcolor: alpha(theme.palette.divider, 0.05) }}>
+                        {themeMode === 'dark' ? <LightMode fontSize="small" /> : <DarkMode fontSize="small" />}
+                    </IconButton>
+                    <IconButton size="small" onClick={toggleLanguage} sx={{ bgcolor: alpha(theme.palette.divider, 0.05) }}>
+                        <LanguageIcon fontSize="small" />
+                    </IconButton>
+                </Stack>
                 <Box sx={{ p: 2, bgcolor: alpha(theme.palette.primary.main, 0.05), borderRadius: 4 }}>
                     <Stack direction="row" spacing={2} alignItems="center">
                         <Avatar sx={{ width: 40, height: 40, bgcolor: 'primary.main' }}>
@@ -154,7 +170,12 @@ const TeacherLayout = () => {
                         {menuItems.find(i => i.path === location.pathname)?.title || 'Dashboard'}
                     </Typography>
 
-                    <Stack direction="row" spacing={1}>
+                    <Stack direction="row" spacing={1} alignItems="center">
+                        <Box sx={{ display: { xs: 'none', sm: 'flex' }, gap: 1 }}>
+                            <IconButton size="small" onClick={toggleTheme} sx={{ bgcolor: alpha(theme.palette.divider, 0.05) }}>
+                                {themeMode === 'dark' ? <LightMode fontSize="small" /> : <DarkMode fontSize="small" />}
+                            </IconButton>
+                        </Box>
                         <IconButton size="small"><Notifications fontSize="small" /></IconButton>
                         <IconButton onClick={handleMenuOpen} size="small">
                             <Avatar sx={{ width: 32, height: 32, bgcolor: 'primary.main', fontSize: '0.8rem' }}>

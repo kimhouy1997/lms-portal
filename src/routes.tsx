@@ -5,6 +5,7 @@ import Home from "@pages/public/Home";
 import About from "@pages/public/About";
 import Courses from "@pages/public/Courses";
 import CourseDetail from "@pages/public/CourseDetail";
+import StudentCourseDetail from "@pages/student/CourseDetail";
 import Login from "@pages/public/Login";
 import Register from "@pages/public/Register";
 import { ForgotPassword } from "@pages/public/ForgotPassword";
@@ -64,7 +65,7 @@ const routes: RouteObject[] = [
             children: [
               { index: true, element: <Home /> },
               { path: ROUTES.student.courses, element: <StudentCourse /> },
-              { path: `${ROUTES.student.courses}/:id`, element: <CourseDetail /> },
+              { path: `${ROUTES.student.courses}/:id`, element: <StudentCourseDetail /> },
               { path: ROUTES.student.profile, element: <StudentSetting /> },
               { path: ROUTES.student.settings, element: <StudentSetting /> },
             ],
