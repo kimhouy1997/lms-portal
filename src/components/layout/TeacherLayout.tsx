@@ -68,11 +68,10 @@ const TeacherLayout = () => {
     const toggleLanguage = () => i18n.changeLanguage(i18n.language === 'en' ? 'kh' : 'en');
 
     const menuItems = [
-        { title: 'Overview', path: '/teacher/dashboard', icon: <Dashboard /> },
+        { title: 'Overview', path: '/teacher', icon: <Dashboard /> },
         { title: 'My Courses', path: '/teacher/courses', icon: <School /> },
         { title: 'Classes', path: '/teacher/classes', icon: <Class /> },
         { title: 'Students', path: '/teacher/students', icon: <People /> },
-        { title: 'Assignments', path: '/teacher/assignments', icon: <Assignment /> },
     ];
 
     const drawer = (

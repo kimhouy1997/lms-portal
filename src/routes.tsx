@@ -22,6 +22,12 @@ import StudentSetting from "@pages/student/Setting";
 import TeacherSetting from "@pages/teacher/Setting";
 import AdminSetting from "@pages/admin/Setting";
 import StudentCourse from "@pages/student/StudentCourse";
+import TeacherDashboard from "./pages/teacher/TeacherDashboard";
+import TeacherCourse from "./pages/teacher/TeacherCourse";
+import TeacherCourseDetail from "./pages/teacher/TeacherCourseDetail";
+import TeacherClass from "./pages/teacher/TeacherClass";
+import TeacherClassDetail from "./pages/teacher/TeacherClassDetail";
+import TeacherStudent from "./pages/teacher/TeacherStudent";
 
 const routes: RouteObject[] = [
 
@@ -86,10 +92,12 @@ const routes: RouteObject[] = [
           {
             element: <TeacherLayout />,
             children: [
-              { index: true, element: <Home /> },
-              { path: ROUTES.teacher.dashboard, element: <Courses /> },
-              { path: ROUTES.teacher.courses, element: <Courses /> },
-              { path: `${ROUTES.teacher.courses}/:id`, element: <CourseDetail /> },
+              { index: true, element: <TeacherDashboard /> },
+              { path: ROUTES.teacher.courses, element: <TeacherCourse /> },
+              { path: `${ROUTES.teacher.courses}/:id`, element: <TeacherCourseDetail /> },
+              { path: ROUTES.teacher.classes, element: <TeacherClass /> },
+              { path: `${ROUTES.teacher.classes}/:id`, element: <TeacherClassDetail /> },
+              { path: ROUTES.teacher.students, element: <TeacherStudent /> },
               { path: ROUTES.teacher.profile, element: <TeacherSetting /> },
               { path: ROUTES.teacher.settings, element: <TeacherSetting /> },
             ],

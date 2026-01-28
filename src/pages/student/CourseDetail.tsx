@@ -23,7 +23,6 @@ import {
     Accordion,
     AccordionSummary,
     AccordionDetails,
-    Tooltip,
     Avatar
 } from '@mui/material';
 import {
@@ -49,7 +48,6 @@ const MotionPaper = motion(Paper);
 const CourseDetail = () => {
     const theme = useTheme();
     const [activeTab, setActiveTab] = useState(1); // Default to 'Lessons'
-    const [activeLesson, setActiveLesson] = useState(2); // Mock current lesson ID
     const [expandedSection, setExpandedSection] = useState<string | false>('section1');
 
     // Mock Data
