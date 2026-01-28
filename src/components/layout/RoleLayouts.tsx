@@ -1,6 +1,11 @@
-import DashboardLayout from './DashboardLayout';
+import StudentLayout from './StudentLayout';
+import TeacherLayout from './TeacherLayout';
+import AdminLayout from './AdminLayout';
+import AssistantLayout from './AssistantLayout';
 
-export const StudentLayout = () => <DashboardLayout role="student" />;
-export const TeacherLayout = () => <DashboardLayout role="teacher" />;
-export const AdminLayout = () => <DashboardLayout role="admin" />;
-export const AssistantLayout = () => <DashboardLayout role="assistant" />;
+export {
+    StudentLayout,
+    TeacherLayout,
+    AdminLayout,
+    AssistantLayout
+};
