@@ -1,4 +1,6 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import {
     Box,
     Typography,
@@ -11,7 +13,9 @@ import {
     useTheme,
     alpha,
     LinearProgress,
-    IconButton
+    IconButton,
+    Tabs,
+    Tab
 } from '@mui/material';
 import {
     School,
@@ -36,7 +40,8 @@ const classesData = [
         nextClass: 'Today, 2:00 PM',
         progress: 65,
         color: '#3f51b5',
-        type: 'On-site'
+        type: 'On-site',
+        status: 'active'
     },
     {
         id: 2,
@@ -46,7 +51,8 @@ const classesData = [
         nextClass: 'Tomorrow, 10:00 AM',
         progress: 42,
         color: '#f44336',
-        type: 'Online'
+        type: 'Online',
+        status: 'active'
     },
     {
         id: 3,
@@ -56,7 +62,8 @@ const classesData = [
         nextClass: 'Mon, 9:00 AM',
         progress: 88,
         color: '#4caf50',
-        type: 'On-site'
+        type: 'On-site',
+        status: 'active'
     },
     {
         id: 4,
@@ -66,28 +73,62 @@ const classesData = [
         nextClass: 'Sat, 1:00 PM',
         progress: 15,
         color: '#ff9800',
-        type: 'Online'
+        type: 'Online',
+        status: 'active'
+    },
+    {
+        id: 5,
+        name: 'Q3 Batch - Python for AI',
+        course: 'Artificial Intelligence',
+        students: 20,
+        nextClass: 'Completed',
+        progress: 100,
+        color: '#673ab7',
+        type: 'On-site',
+        status: 'archived'
+    },
+    {
+        id: 6,
+        name: 'Spring 2025 - Data Science',
+        course: 'Data Science Fundamentals',
+        students: 15,
+        nextClass: 'Completed',
+        progress: 100,
+        color: '#009688',
+        type: 'Online',
+        status: 'archived'
     }
 ];
 
 const TeacherClass = () => {
     const theme = useTheme();
     const navigate = useNavigate();
+    const { t } = useTranslation();
+    const [tabValue, setTabValue] = useState(0); // 0: Active, 1: Archived
+
+    const handleTabChange = (_: React.SyntheticEvent, newValue: number) => {
+        setTabValue(newValue);
+    };
 
     const handleViewDetail = (id: number) => {
         navigate(`/${ROUTES.teacher.index}/${ROUTES.teacher.classes}/${id}`);
     };
 
+    const activeClasses = classesData.filter(item => item.status === 'active');
+    const archivedClasses = classesData.filter(item => item.status === 'archived');
+
+    const filteredClasses = tabValue === 0 ? activeClasses : archivedClasses;
+
     return (
         <Box sx={{ pb: 6 }}>
             {/* Header Area */}
-            <Box sx={{ mb: 5, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: 2 }}>
+            <Box sx={{ mb: 4, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 2 }}>
                 <Box>
                     <Typography variant="h3" sx={{ fontWeight: 900, letterSpacing: -1.5, mb: 1 }}>
-                        My Classes
+                        {t('teacher.classes.title')}
                     </Typography>
                     <Typography variant="body1" color="text.secondary" sx={{ fontWeight: 500, opacity: 0.8 }}>
-                        Managing {classesData.length} active classes and tracking student engagement.
+                        {t('teacher.classes.manage_desc', { count: filteredClasses.length })}
                     </Typography>
                 </Box>
                 <Button
@@ -99,16 +140,77 @@ const TeacherClass = () => {
                         py: 1.5,
                         fontWeight: 800,
                         height: 54,
-                        boxShadow: `0 8px 20px ${alpha(theme.palette.primary.main, 0.3)}`
+                        boxShadow: `0 8px 20px ${alpha(theme.palette.primary.main, 0.3)}`,
+                        '&:hover': { transform: 'translateY(-2px)', boxShadow: `0 12px 25px ${alpha(theme.palette.primary.main, 0.4)}` }
                     }}
                 >
-                    Create New Class
+                    {t('teacher.classes.create_new')}
                 </Button>
+            </Box>
+
+            {/* Tabs */}
+            <Box sx={{ mb: 4, borderBottom: `1px solid ${theme.palette.divider}` }}>
+                <Tabs
+                    value={tabValue}
+                    onChange={handleTabChange}
+                    sx={{
+                        '& .MuiTab-root': {
+                            fontWeight: 800,
+                            fontSize: '1rem',
+                            textTransform: 'none',
+                            minHeight: 48,
+                            px: 3
+                        }
+                    }}
+                >
+                    <Tab
+                        label={
+                            <Stack direction="row" spacing={1} alignItems="center">
+                                <span>{t('teacher.classes.active')}</span>
+                                <Chip
+                                    label={activeClasses.length}
+                                    size="small"
+                                    sx={{
+                                        height: 20,
+                                        minWidth: 24,
+                                        fontWeight: 900,
+                                        fontSize: '0.7rem',
+                                        bgcolor: tabValue === 0 ? alpha(theme.palette.primary.main, 0.1) : alpha(theme.palette.divider, 0.5),
+                                        color: tabValue === 0 ? 'primary.main' : 'text.secondary',
+                                        transition: '0.2s',
+                                        '& .MuiChip-label': { px: 0.8 }
+                                    }}
+                                />
+                            </Stack>
+                        }
+                    />
+                    <Tab
+                        label={
+                            <Stack direction="row" spacing={1} alignItems="center">
+                                <span>{t('teacher.classes.archived')}</span>
+                                <Chip
+                                    label={archivedClasses.length}
+                                    size="small"
+                                    sx={{
+                                        height: 20,
+                                        minWidth: 24,
+                                        fontWeight: 900,
+                                        fontSize: '0.7rem',
+                                        bgcolor: tabValue === 1 ? alpha(theme.palette.primary.main, 0.1) : alpha(theme.palette.divider, 0.5),
+                                        color: tabValue === 1 ? 'primary.main' : 'text.secondary',
+                                        transition: '0.2s',
+                                        '& .MuiChip-label': { px: 0.8 }
+                                    }}
+                                />
+                            </Stack>
+                        }
+                    />
+                </Tabs>
             </Box>
 
             {/* Grid of Classes */}
             <Grid container spacing={4}>
-                {classesData.map((item, index) => (
+                {filteredClasses.map((item, index) => (
                     <Grid size={{ xs: 12, md: 6, xl: 4 }} key={item.id}>
                         <MotionCard
                             initial={{ opacity: 0, scale: 0.95 }}
@@ -140,7 +242,7 @@ const TeacherClass = () => {
                                     </Box>
                                     <Stack direction="row" spacing={0.5}>
                                         <Chip
-                                            label={item.type}
+                                            label={item.type === 'Online' ? t('teacher.classes.online') : t('teacher.classes.on_site')}
                                             size="small"
                                             sx={{
                                                 fontWeight: 800,
@@ -160,7 +262,7 @@ const TeacherClass = () => {
                                     {item.name}
                                 </Typography>
                                 <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 600, mb: 3 }}>
-                                    Target: {item.course}
+                                    {t('teacher.classes.target')} {item.course}
                                 </Typography>
 
                                 <Grid container spacing={2}>
@@ -168,7 +270,7 @@ const TeacherClass = () => {
                                         <Stack direction="row" spacing={1} alignItems="center">
                                             <People sx={{ color: 'text.secondary', fontSize: 18 }} />
                                             <Typography variant="body2" sx={{ fontWeight: 700 }}>
-                                                {item.students} Students
+                                                {item.students} {t('teacher.classes.students')}
                                             </Typography>
                                         </Stack>
                                     </Grid>
@@ -176,7 +278,7 @@ const TeacherClass = () => {
                                         <Stack direction="row" spacing={1} alignItems="center">
                                             <CalendarToday sx={{ color: 'text.secondary', fontSize: 18 }} />
                                             <Typography variant="body2" sx={{ fontWeight: 700 }}>
-                                                {item.nextClass.split(',')[0]}
+                                                {item.status === 'active' ? item.nextClass.split(',')[0] : t('teacher.classes.archived')}
                                             </Typography>
                                         </Stack>
                                     </Grid>
@@ -187,7 +289,7 @@ const TeacherClass = () => {
                                 <Box sx={{ mb: 3 }}>
                                     <Stack direction="row" justifyContent="space-between" alignItems="center" mb={1}>
                                         <Typography variant="caption" sx={{ fontWeight: 800, color: 'text.secondary', textTransform: 'uppercase' }}>
-                                            Syllabus Progress
+                                            {t('teacher.classes.progress')}
                                         </Typography>
                                         <Typography variant="caption" sx={{ fontWeight: 900, color: item.color }}>
                                             {item.progress}%
@@ -244,7 +346,7 @@ const TeacherClass = () => {
                                         onClick={() => handleViewDetail(item.id)}
                                         sx={{ fontWeight: 800, textTransform: 'none' }}
                                     >
-                                        Manage
+                                        {t('teacher.classes.manage')}
                                     </Button>
                                 </Stack>
                             </Box>

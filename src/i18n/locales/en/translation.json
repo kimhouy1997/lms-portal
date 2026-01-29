@@ -46,5 +46,21 @@
     "links": "Quick Links",
     "contact": "Contact Us",
     "rights": "All rights reserved."
+  },
+  "teacher": {
+    "classes": {
+      "title": "My Classes",
+      "active": "Active Classes",
+      "archived": "Archived Classes",
+      "manage_desc": "Managing {{count}} active classes and tracking student engagement.",
+      "create_new": "Create New Class",
+      "students": "Students",
+      "next_class": "Next: ",
+      "progress": "Syllabus Progress",
+      "manage": "Manage",
+      "online": "Online",
+      "on_site": "On-site",
+      "target": "Target: "
+    }
   }
 }
