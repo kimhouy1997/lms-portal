@@ -23,7 +23,9 @@ import {
     Accordion,
     AccordionSummary,
     AccordionDetails,
-    Avatar
+    Avatar,
+    Checkbox,
+    FormControlLabel
 } from '@mui/material';
 import {
     PlayCircleOutline,
@@ -37,10 +39,13 @@ import {
     HelpOutline,
     Schedule,
     CloudUpload,
-    AutoAwesome,
-    EmojiEvents
+    EmojiEvents,
+    RadioButtonUnchecked,
+    CheckCircleOutline,
+    AutoAwesome
 } from '@mui/icons-material';
 import { motion, AnimatePresence } from 'framer-motion';
+import ReactPlayer from 'react-player';
 
 const MotionBox = motion(Box);
 const MotionPaper = motion(Paper);
@@ -49,6 +54,16 @@ const CourseDetail = () => {
     const theme = useTheme();
     const [activeTab, setActiveTab] = useState(1); // Default to 'Lessons'
     const [expandedSection, setExpandedSection] = useState<string | false>('section1');
+    const [completedLessons, setCompletedLessons] = useState<number[]>([1]); // Mock initial completed lesson
+
+    const toggleLessonCompletion = (e: React.MouseEvent, lessonId: number) => {
+        e.stopPropagation(); // Don't trigger lesson selection
+        setCompletedLessons(prev =>
+            prev.includes(lessonId)
+                ? prev.filter(id => id !== lessonId)
+                : [...prev, lessonId]
+        );
+    };
 
     // Mock Data
     const courseData = {
@@ -68,7 +83,8 @@ const CourseDetail = () => {
         title: 'Advanced Wirefaming & Component Architecture',
         duration: '15:20',
         type: 'video',
-        content: 'https://images.unsplash.com/photo-1541462608141-ad60397d446a?auto=format&fit=crop&q=80&w=1200' // Mock video placeholder
+        content: 'https://www.youtube.com/watch?v=Y85l8azDDCc', // Real YouTube URL
+        thumbnail: 'https://images.unsplash.com/photo-1541462608141-ad60397d446a?auto=format&fit=crop&q=80&w=1200'
     };
 
     const sections = [
@@ -238,46 +254,50 @@ const CourseDetail = () => {
                                 animate={{ opacity: 1, x: 0 }}
                             >
                                 {/* 4. Current Lesson Viewer */}
-                                <MotionPaper sx={{ borderRadius: 6, overflow: 'hidden', mb: 4, bgcolor: 'black' }}>
-                                    <Box sx={{ position: 'relative', width: '100%', aspectRatio: '16/9' }}>
-                                        <Box
-                                            component="img"
-                                            src={activeLessonData.content}
-                                            sx={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.8 }}
-                                        />
-                                        <Box sx={{
-                                            position: 'absolute',
-                                            bottom: 0,
-                                            left: 0,
-                                            right: 0,
-                                            p: 4,
-                                            background: 'linear-gradient(to top, rgba(0,0,0,0.8), transparent)'
-                                        }}>
-                                            <Typography variant="subtitle2" color="primary.main" sx={{ fontWeight: 800, mb: 0.5 }}>NOW PLAYING</Typography>
-                                            <Typography variant="h4" sx={{ fontWeight: 900, color: 'white' }}>{activeLessonData.title}</Typography>
+                                <MotionPaper sx={{ borderRadius: 6, overflow: 'hidden', mb: 4, bgcolor: 'black', boxShadow: '0 20px 40px rgba(0,0,0,0.2)' }}>
+                                    <Box sx={{ position: 'relative', width: '100%', pt: '56.25%' /* 16:9 Aspect Ratio */ }}>
+                                        <Box sx={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}>
+                                            <ReactPlayer
+                                                src={activeLessonData.content}
+                                                width="100%"
+                                                height="100%"
+                                                controls
+                                                light={activeLessonData.thumbnail}
+                                                playIcon={
+                                                    <IconButton sx={{
+                                                        bgcolor: 'rgba(255,255,255,0.2)',
+                                                        backdropFilter: 'blur(10px)',
+                                                        color: 'white',
+                                                        p: 3,
+                                                        transition: 'all 0.3s ease',
+                                                        '&:hover': { bgcolor: 'primary.main', transform: 'scale(1.1)' }
+                                                    }}>
+                                                        <PlayCircleOutline sx={{ fontSize: 60 }} />
+                                                    </IconButton>
+                                                }
+                                            />
                                         </Box>
-                                        <IconButton sx={{
-                                            position: 'absolute',
-                                            top: '50%',
-                                            left: '50%',
-                                            transform: 'translate(-50%, -50%)',
-                                            bgcolor: 'rgba(255,255,255,0.2)',
-                                            backdropFilter: 'blur(10px)',
-                                            color: 'white',
-                                            p: 3,
-                                            '&:hover': { bgcolor: 'primary.main' }
-                                        }}>
-                                            <PlayCircleOutline sx={{ fontSize: 60 }} />
-                                        </IconButton>
                                     </Box>
                                     <Box sx={{ p: 4, display: 'flex', justifyContent: 'space-between', alignItems: 'center', bgcolor: 'background.paper' }}>
                                         <Stack direction="row" spacing={1}>
                                             <Button variant="outlined" startIcon={<ArrowBack />} sx={{ borderRadius: 2 }}>Prev</Button>
                                             <Button variant="outlined" endIcon={<ArrowForward />} sx={{ borderRadius: 2 }}>Next</Button>
                                         </Stack>
-                                        <Button variant="contained" color="success" startIcon={<CheckCircle />} sx={{ borderRadius: 2, fontWeight: 700 }}>
-                                            Mark as Completed
-                                        </Button>
+                                        <Stack direction="row" spacing={3} alignItems="center">
+                                            <FormControlLabel
+                                                control={
+                                                    <Checkbox
+                                                        color="success"
+                                                        checked={completedLessons.includes(activeLessonData.id)}
+                                                        onChange={(e) => toggleLessonCompletion(e as any, activeLessonData.id)}
+                                                    />
+                                                }
+                                                label={<Typography variant="body2" sx={{ fontWeight: 700 }}>Mark as Done</Typography>}
+                                            />
+                                            <Button variant="contained" color="success" startIcon={<CheckCircle />} sx={{ borderRadius: 2, fontWeight: 700 }}>
+                                                Next Lesson
+                                            </Button>
+                                        </Stack>
                                     </Box>
                                 </MotionPaper>
 
@@ -304,41 +324,94 @@ const CourseDetail = () => {
                                         </AccordionSummary>
                                         <AccordionDetails sx={{ p: 0 }}>
                                             <List disablePadding>
-                                                {section.lessons.map((lesson) => {
+                                                {section.lessons.map((lesson, index) => {
                                                     const isCurrent = lesson.status === 'current';
                                                     const isLocked = lesson.status === 'locked';
-                                                    const isCompleted = lesson.status === 'completed';
+                                                    const isCompleted = completedLessons.includes(lesson.id);
+                                                    const isLast = index === section.lessons.length - 1;
 
                                                     return (
-                                                        <ListItem key={lesson.id} disablePadding>
+                                                        <ListItem key={lesson.id} disablePadding sx={{ position: 'relative' }}>
+                                                            {/* Vertical connectivity line (Trail) */}
+                                                            {!isLast && (
+                                                                <Box sx={{
+                                                                    position: 'absolute',
+                                                                    left: 32,
+                                                                    top: 40,
+                                                                    bottom: -15,
+                                                                    width: 2,
+                                                                    bgcolor: alpha(theme.palette.divider, 0.4),
+                                                                    zIndex: 0
+                                                                }} />
+                                                            )}
+
                                                             <ListItemButton sx={{
                                                                 py: 2,
-                                                                px: 3,
+                                                                px: 2,
+                                                                my: 0.5,
+                                                                borderRadius: 3,
+                                                                transition: 'all 0.2s',
                                                                 bgcolor: isCurrent ? alpha(theme.palette.primary.main, 0.05) : 'transparent',
-                                                                borderLeft: isCurrent ? `4px solid ${theme.palette.primary.main}` : '4px solid transparent'
+                                                                '&:hover': {
+                                                                    bgcolor: isCurrent ? alpha(theme.palette.primary.main, 0.08) : alpha(theme.palette.divider, 0.05),
+                                                                    transform: 'translateX(4px)'
+                                                                }
                                                             }}>
-                                                                <ListItemIcon sx={{ minWidth: 40 }}>
-                                                                    {isCompleted && <CheckCircle color="success" />}
-                                                                    {isCurrent && <PlayCircleOutline color="primary" />}
-                                                                    {isLocked && <Lock color="disabled" />}
+                                                                <ListItemIcon sx={{ minWidth: 40, zIndex: 1, position: 'relative' }}>
+                                                                    <IconButton
+                                                                        size="small"
+                                                                        onClick={(e) => !isLocked && toggleLessonCompletion(e, lesson.id)}
+                                                                        disabled={isLocked}
+                                                                        sx={{
+                                                                            p: 0,
+                                                                            color: isCompleted ? 'success.main' : isCurrent ? 'primary.main' : 'text.disabled',
+                                                                            bgcolor: 'background.paper',
+                                                                            '&:hover': { bgcolor: alpha(theme.palette.success.main, 0.1) }
+                                                                        }}
+                                                                    >
+                                                                        {isCompleted ? (
+                                                                            <CheckCircle sx={{ fontSize: 28 }} />
+                                                                        ) : isLocked ? (
+                                                                            <Lock sx={{ fontSize: 18 }} />
+                                                                        ) : (
+                                                                            <RadioButtonUnchecked sx={{ fontSize: 28 }} />
+                                                                        )}
+                                                                    </IconButton>
                                                                 </ListItemIcon>
                                                                 <ListItemText
                                                                     primary={lesson.title}
                                                                     primaryTypographyProps={{
-                                                                        fontWeight: isCurrent ? 800 : 500,
+                                                                        fontWeight: isCurrent ? 800 : 600,
+                                                                        fontSize: '0.9rem',
                                                                         color: isLocked ? 'text.secondary' : 'text.primary'
                                                                     }}
-                                                                    secondary={lesson.duration}
+                                                                    secondary={
+                                                                        <Stack direction="row" spacing={1} alignItems="center" sx={{ mt: 0.5 }}>
+                                                                            <Schedule sx={{ fontSize: 13, color: 'text.secondary' }} />
+                                                                            <Typography variant="caption" sx={{ fontWeight: 600 }}>{lesson.duration}</Typography>
+                                                                        </Stack>
+                                                                    }
                                                                 />
                                                                 {isCurrent && (
-                                                                    <Typography variant="caption" sx={{ bgcolor: 'primary.main', color: 'white', px: 1, borderRadius: 1, fontWeight: 800 }}>
-                                                                        CURRENTLY VIEWING
-                                                                    </Typography>
+                                                                    <Chip
+                                                                        label="LIVE"
+                                                                        color="success"
+                                                                        size="small"
+                                                                        sx={{
+                                                                            bgcolor: alpha(theme.palette.success.main, 0.1),
+                                                                            color: 'success.main',
+                                                                            fontWeight: 900,
+                                                                            fontSize: '0.55rem',
+                                                                            height: 20
+                                                                        }}
+                                                                    />
                                                                 )}
                                                             </ListItemButton>
                                                         </ListItem>
                                                     );
                                                 })}
+
+
                                             </List>
                                         </AccordionDetails>
                                     </Accordion>
@@ -465,7 +538,14 @@ const CourseDetail = () => {
 };
 
 // Internal Chip substitute to avoid unused import if needed elsewhere
-const Chip = ({ label, color, size, sx }: any) => {
+interface ChipProps {
+    label: string;
+    color: 'success' | 'warning';
+    size?: 'small' | 'medium';
+    sx?: object;
+}
+
+const Chip = ({ label, color, size, sx }: ChipProps) => {
     const theme = useTheme();
     const bgcolor = color === 'success' ? theme.palette.success.main : theme.palette.warning.main;
     return (

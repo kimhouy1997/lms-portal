@@ -24,7 +24,8 @@ import {
     Paper,
     MenuItem,
     Menu,
-    Tooltip
+    Tooltip,
+    Checkbox
 } from '@mui/material';
 // import { motion } from 'framer-motion';
 import {
@@ -99,7 +100,7 @@ const LessonAccordion = ({
                 <ListItem
                     sx={{ py: 1.5, px: 2 }}
                     secondaryAction={
-                        <Stack direction="row" spacing={0.5}>
+                        <Stack direction="row" spacing={0.5} alignItems="center">
                             <IconButton size="small" onClick={(e) => onOpenLessonMenu(e, lesson)}>
                                 <MoreVert fontSize="small" />
                             </IconButton>
@@ -133,15 +134,26 @@ const LessonAccordion = ({
                         </Box>
                     </ListItemIcon>
                     <ListItemText
-                        primary={lesson.title}
-                        primaryTypographyProps={{ fontWeight: 700, fontSize: '0.95rem', color: 'text.primary' }}
+                        primary={
+                            <Stack direction="row" spacing={1} alignItems="center">
+                                <Typography sx={{ fontWeight: 700, fontSize: '0.95rem', color: 'text.primary' }}>
+                                    {lesson.title}
+                                </Typography>
+                                <Checkbox
+                                    size="small"
+                                    color="success"
+                                    sx={{ p: 0 }}
+                                    onClick={(e) => e.stopPropagation()}
+                                />
+                            </Stack>
+                        }
                         secondary={lesson.duration ? `${lesson.duration} • ${lesson.is_preview ? 'Preview' : 'Exclusive'}` : lesson.is_preview ? 'Preview' : 'Exclusive'}
                         secondaryTypographyProps={{ fontSize: '0.75rem', fontWeight: 600 }}
                         onClick={hasResources ? () => setExpanded(!expanded) : undefined}
                         sx={{ cursor: hasResources ? 'pointer' : 'default' }}
                     />
                 </ListItem>
-            </Paper>
+            </Paper >
 
             <Collapse in={expanded}>
                 <List sx={{ pl: 5.5, py: 0.5 }}>
@@ -176,7 +188,7 @@ const LessonAccordion = ({
                     ))}
                 </List>
             </Collapse>
-        </Box>
+        </Box >
     );
 };
 
