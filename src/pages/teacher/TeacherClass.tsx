@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import {
     Box,
     Typography,
-    Grid,
+    Grid2 as Grid,
     Card,
     Button,
     Stack,
@@ -15,7 +15,11 @@ import {
     LinearProgress,
     IconButton,
     Tabs,
-    Tab
+    Tab,
+    Menu,
+    ListItemIcon,
+    ListItemText,
+    Divider
 } from '@mui/material';
 import {
     School,
@@ -23,15 +27,33 @@ import {
     CalendarToday,
     ArrowForward,
     MoreVert,
-    Add
+    Add,
+    Edit,
+    Archive,
+    Unarchive,
+    Delete,
+    Visibility
 } from '@mui/icons-material';
 import { motion } from 'framer-motion';
 import { ROUTES } from '@/constant/routers';
 
 const MotionCard = motion(Card);
 
+// Types
+export interface TeacherClassItem {
+    id: number;
+    name: string;
+    course: string;
+    students: number;
+    nextClass: string;
+    progress: number;
+    color: string;
+    type: string;
+    status: string;
+}
+
 // Mock Data for Classes
-const classesData = [
+const classesData: TeacherClassItem[] = [
     {
         id: 1,
         name: 'Batch A - Web development',
@@ -105,6 +127,18 @@ const TeacherClass = () => {
     const navigate = useNavigate();
     const { t } = useTranslation();
     const [tabValue, setTabValue] = useState(0); // 0: Active, 1: Archived
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    const [selectedClass, setSelectedClass] = useState<TeacherClassItem | null>(null);
+
+    const handleMenuOpen = (event: React.MouseEvent<HTMLElement>, classItem: TeacherClassItem) => {
+        setAnchorEl(event.currentTarget);
+        setSelectedClass(classItem);
+    };
+
+    const handleMenuClose = () => {
+        setAnchorEl(null);
+        setSelectedClass(null);
+    };
 
     const handleTabChange = (_: React.SyntheticEvent, newValue: number) => {
         setTabValue(newValue);
@@ -240,7 +274,7 @@ const TeacherClass = () => {
                                     }}>
                                         <School fontSize="medium" />
                                     </Box>
-                                    <Stack direction="row" spacing={0.5}>
+                                    <Stack direction="row" spacing={0.5} alignItems="center">
                                         <Chip
                                             label={item.type === 'Online' ? t('teacher.classes.online') : t('teacher.classes.on_site')}
                                             size="small"
@@ -252,7 +286,14 @@ const TeacherClass = () => {
                                                 border: 'none'
                                             }}
                                         />
-                                        <IconButton size="small">
+                                        <IconButton
+                                            size="small"
+                                            onClick={(e) => handleMenuOpen(e, item)}
+                                            sx={{
+                                                bgcolor: anchorEl && selectedClass?.id === item.id ? alpha(theme.palette.primary.main, 0.1) : 'transparent',
+                                                color: anchorEl && selectedClass?.id === item.id ? 'primary.main' : 'text.secondary'
+                                            }}
+                                        >
                                             <MoreVert fontSize="small" />
                                         </IconButton>
                                     </Stack>
@@ -354,6 +395,65 @@ const TeacherClass = () => {
                     </Grid>
                 ))}
             </Grid>
+
+            {/* Actions Menu */}
+            <Menu
+                anchorEl={anchorEl}
+                open={Boolean(anchorEl)}
+                onClose={handleMenuClose}
+                transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+                anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+                PaperProps={{
+                    sx: {
+                        borderRadius: 3,
+                        mt: 1,
+                        minWidth: 180,
+                        boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
+                        border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+                        '& .MuiMenuItem-root': {
+                            px: 2,
+                            py: 1.2,
+                            borderRadius: 1.5,
+                            mx: 0.5,
+                            my: 0.2,
+                            '&:hover': {
+                                bgcolor: alpha(theme.palette.primary.main, 0.05),
+                                color: theme.palette.primary.main,
+                                '& .MuiListItemIcon-root': { color: theme.palette.primary.main }
+                            }
+                        }
+                    }
+                }}
+            >
+                <MenuItem onClick={() => {
+                    if (selectedClass) handleViewDetail(selectedClass.id);
+                    handleMenuClose();
+                }}>
+                    <ListItemIcon><Visibility fontSize="small" /></ListItemIcon>
+                    <ListItemText primary={t('teacher.classes.view_detail', { defaultValue: 'View Details' })} primaryTypographyProps={{ variant: 'body2', fontWeight: 600 }} />
+                </MenuItem>
+                <MenuItem onClick={handleMenuClose}>
+                    <ListItemIcon><Edit fontSize="small" /></ListItemIcon>
+                    <ListItemText primary={t('common.edit', { defaultValue: 'Edit Class' })} primaryTypographyProps={{ variant: 'body2', fontWeight: 600 }} />
+                </MenuItem>
+                <Divider sx={{ my: 1, opacity: 0.5 }} />
+                <MenuItem onClick={handleMenuClose}>
+                    <ListItemIcon>
+                        {selectedClass?.status === 'active' ? <Archive fontSize="small" /> : <Unarchive fontSize="small" />}
+                    </ListItemIcon>
+                    <ListItemText
+                        primary={selectedClass?.status === 'active' ? t('common.archive', { defaultValue: 'Archive' }) : t('common.unarchive', { defaultValue: 'Unarchive' })}
+                        primaryTypographyProps={{ variant: 'body2', fontWeight: 600 }}
+                    />
+                </MenuItem>
+                <MenuItem
+                    onClick={handleMenuClose}
+                    sx={{ color: 'error.main', '&:hover': { bgcolor: alpha(theme.palette.error.main, 0.05) + ' !important' } }}
+                >
+                    <ListItemIcon><Delete fontSize="small" sx={{ color: 'error.main' }} /></ListItemIcon>
+                    <ListItemText primary={t('common.delete', { defaultValue: 'Delete Class' })} primaryTypographyProps={{ variant: 'body2', fontWeight: 600 }} />
+                </MenuItem>
+            </Menu>
         </Box>
     );
 };
