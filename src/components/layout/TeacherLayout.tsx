@@ -159,14 +159,6 @@ const TeacherLayout = () => {
             </List>
 
             <Box sx={{ p: 2, mt: 'auto' }}>
-                <Stack direction="row" spacing={1} justifyContent="center" sx={{ mb: 2 }}>
-                    <IconButton size="small" onClick={toggleTheme} sx={{ bgcolor: alpha(theme.palette.divider, 0.05) }}>
-                        {themeMode === 'dark' ? <LightMode fontSize="small" /> : <DarkMode fontSize="small" />}
-                    </IconButton>
-                    <IconButton size="small" onClick={toggleLanguage} sx={{ bgcolor: alpha(theme.palette.divider, 0.05) }}>
-                        <LanguageIcon fontSize="small" />
-                    </IconButton>
-                </Stack>
                 <Box sx={{ p: 2, bgcolor: alpha(theme.palette.primary.main, 0.05), borderRadius: 4 }}>
                     <Stack direction="row" spacing={2} alignItems="center">
                         <Avatar sx={{ width: 40, height: 40, bgcolor: 'primary.main' }}>
@@ -228,6 +220,9 @@ const TeacherLayout = () => {
                     </Typography>
 
                     <Stack direction="row" spacing={1} alignItems="center">
+                        <IconButton size="small" onClick={toggleLanguage} sx={{ bgcolor: alpha(theme.palette.divider, 0.05) }}>
+                            <LanguageIcon fontSize="small" />
+                        </IconButton>
                         <Box sx={{ display: { xs: 'none', sm: 'flex' }, gap: 1 }}>
                             <IconButton size="small" onClick={toggleTheme} sx={{ bgcolor: alpha(theme.palette.divider, 0.05) }}>
                                 {themeMode === 'dark' ? <LightMode fontSize="small" /> : <DarkMode fontSize="small" />}
@@ -268,12 +263,12 @@ const TeacherLayout = () => {
                 component="main"
                 sx={{
                     flexGrow: 1,
+                    bgcolor: alpha(theme.palette.background.default, 0.8),
+                    backdropFilter: 'blur(10px)',
+                    borderBottom: `1px solid ${theme.palette.divider}`,
+                    color: 'text.primary',
                     p: 3,
                     width: { md: `calc(100% - ${open ? drawerWidth : 0}px)` },
-                    transition: theme.transitions.create(['width', 'margin'], {
-                        easing: theme.transitions.easing.sharp,
-                        duration: theme.transitions.duration.leavingScreen,
-                    }),
                     mt: 8
                 }}
             >

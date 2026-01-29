@@ -222,6 +222,10 @@ const AdminLayout = () => {
                         boxSizing: 'border-box',
                         border: 'none'
                     },
+                    bgcolor: alpha(theme.palette.background.default, 0.8),
+                    backdropFilter: 'blur(10px)',
+                    borderBottom: `1px solid ${theme.palette.divider}`,
+                    color: 'text.primary',
                 }}
                 open
             >
@@ -235,7 +239,11 @@ const AdminLayout = () => {
                     p: 6,
                     mt: 8,
                     minHeight: '100vh',
-                    width: { sm: `calc(100% - ${drawerWidth}px)` }
+                    width: { sm: `calc(100% - ${drawerWidth}px)` },
+                    bgcolor: alpha(theme.palette.background.default, 0.8),
+                    backdropFilter: 'blur(10px)',
+                    borderBottom: `1px solid ${theme.palette.divider}`,
+                    color: 'text.primary',
                 }}
             >
                 <Outlet />
