@@ -26,7 +26,6 @@ import {
     Dashboard,
     School,
     Class,
-    Assignment,
     Person,
     Settings,
     Logout,
@@ -37,6 +36,7 @@ import { DarkMode, LightMode, Language as LanguageIcon } from '@mui/icons-materi
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { logout as logoutAction } from '@/redux/slices/authSlice';
 import { setThemeMode } from '@/redux/slices/appSlice';
+import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 
 const drawerWidth = 280;
@@ -47,7 +47,7 @@ const TeacherLayout = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
-    const { i18n } = useTranslation();
+    const { t, i18n } = useTranslation();
     const { user } = useAppSelector((state) => state.auth);
     const { themeMode } = useAppSelector((state) => state.app);
 
@@ -68,17 +68,31 @@ const TeacherLayout = () => {
     const toggleLanguage = () => i18n.changeLanguage(i18n.language === 'en' ? 'kh' : 'en');
 
     const menuItems = [
-        { title: 'Overview', path: '/teacher', icon: <Dashboard /> },
-        { title: 'My Courses', path: '/teacher/courses', icon: <School /> },
-        { title: 'Classes', path: '/teacher/classes', icon: <Class /> },
-        { title: 'Students', path: '/teacher/students', icon: <People /> },
+        { title: t('nav.overview', { defaultValue: 'Overview' }), path: '/teacher', icon: <Dashboard /> },
+        { title: t('teacher.classes.title', { defaultValue: 'Classes' }), path: '/teacher/classes', icon: <Class /> },
+        { title: t('teacher.classes.students', { defaultValue: 'Students' }), path: '/teacher/students', icon: <People /> },
     ];
 
     const drawer = (
         <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column', bgcolor: 'background.paper' }}>
-            <Box sx={{ p: 3, display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 80 }}>
-                <Typography variant="h6" sx={{ fontWeight: 900, color: 'primary.main', letterSpacing: -1 }}>
-                    TEACHER PANEL
+            <Box sx={{ p: 3, display: 'flex', alignItems: 'center', gap: 2, minHeight: 90 }}>
+                <Box sx={{
+                    width: 42,
+                    height: 42,
+                    borderRadius: 3,
+                    bgcolor: 'primary.main',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    boxShadow: `0 8px 16px ${alpha(theme.palette.primary.main, 0.3)}`
+                }}>
+                    <School sx={{ color: 'white' }} />
+                </Box>
+                <Typography variant="h6" sx={{ fontWeight: 900, color: 'text.primary', letterSpacing: -1, lineHeight: 1 }}>
+                    LMS<Box component="span" sx={{ color: 'primary.main' }}>PORTAL</Box>
+                    <Typography variant="caption" display="block" sx={{ fontWeight: 600, color: 'text.secondary', letterSpacing: 1, mt: 0.5 }}>
+                        TEACHER HUB
+                    </Typography>
                 </Typography>
             </Box>
 
@@ -86,27 +100,58 @@ const TeacherLayout = () => {
 
             <List sx={{ px: 2, py: 4, flexGrow: 1 }}>
                 {menuItems.map((item) => {
-                    const isActive = location.pathname === item.path;
+                    const isActive = item.path === '/teacher'
+                        ? location.pathname === '/teacher' || location.pathname === '/teacher/'
+                        : location.pathname.startsWith(item.path);
+
                     return (
-                        <ListItem key={item.title} disablePadding sx={{ mb: 1 }}>
+                        <ListItem key={item.title} disablePadding sx={{ mb: 1, position: 'relative' }}>
+                            {isActive && (
+                                <motion.div
+                                    layoutId="nav-indicator"
+                                    style={{
+                                        position: 'absolute',
+                                        left: -16,
+                                        width: 4,
+                                        height: '70%',
+                                        backgroundColor: theme.palette.primary.main,
+                                        borderRadius: '0 4px 4px 0',
+                                        boxShadow: `0 0 10px ${alpha(theme.palette.primary.main, 0.5)}`
+                                    }}
+                                />
+                            )}
                             <ListItemButton
                                 component={NavLink}
                                 to={item.path}
                                 sx={{
                                     borderRadius: 3,
                                     py: 1.5,
+                                    transition: 'all 0.3s ease',
                                     color: isActive ? 'primary.main' : 'text.secondary',
                                     bgcolor: isActive ? alpha(theme.palette.primary.main, 0.08) : 'transparent',
                                     '&:hover': {
                                         bgcolor: alpha(theme.palette.primary.main, 0.04),
-                                        color: 'primary.main'
+                                        color: 'primary.main',
+                                        transform: isActive ? 'none' : 'translateX(4px)'
+                                    },
+                                    '& .MuiListItemIcon-root': {
+                                        color: isActive ? 'primary.main' : 'text.secondary',
+                                        transition: 'all 0.3s ease',
+                                        minWidth: 45
                                     }
                                 }}
                             >
-                                <ListItemIcon sx={{ color: 'inherit', minWidth: 45 }}>
+                                <ListItemIcon>
                                     {item.icon}
                                 </ListItemIcon>
-                                <ListItemText primary={item.title} primaryTypographyProps={{ fontWeight: isActive ? 700 : 500 }} />
+                                <ListItemText
+                                    primary={item.title}
+                                    primaryTypographyProps={{
+                                        fontWeight: isActive ? 800 : 500,
+                                        fontSize: '0.95rem',
+                                        letterSpacing: -0.2
+                                    }}
+                                />
                             </ListItemButton>
                         </ListItem>
                     );
@@ -165,8 +210,21 @@ const TeacherLayout = () => {
                         <MenuIcon />
                     </IconButton>
 
-                    <Typography variant="h6" sx={{ fontWeight: 700 }}>
-                        {menuItems.find(i => i.path === location.pathname)?.title || 'Dashboard'}
+                    <Typography
+                        variant="h6"
+                        sx={{
+                            fontWeight: 800,
+                            background: `linear-gradient(45deg, ${theme.palette.primary.main}, ${theme.palette.primary.dark})`,
+                            WebkitBackgroundClip: 'text',
+                            WebkitTextFillColor: 'transparent',
+                            letterSpacing: -0.5
+                        }}
+                    >
+                        {menuItems.find(item =>
+                            item.path === '/teacher'
+                                ? location.pathname === '/teacher' || location.pathname === '/teacher/'
+                                : location.pathname.startsWith(item.path)
+                        )?.title || 'Dashboard'}
                     </Typography>
 
                     <Stack direction="row" spacing={1} alignItems="center">
