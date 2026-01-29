@@ -70,6 +70,7 @@ const TeacherLayout = () => {
     const menuItems = [
         { title: t('nav.overview', { defaultValue: 'Overview' }), path: '/teacher', icon: <Dashboard /> },
         { title: t('teacher.classes.title', { defaultValue: 'Classes' }), path: '/teacher/classes', icon: <Class /> },
+        { title: t('teacher.courses.title', { defaultValue: 'Courses' }), path: '/teacher/courses', icon: <School /> },
         { title: t('teacher.classes.students', { defaultValue: 'Students' }), path: '/teacher/students', icon: <People /> },
     ];
 

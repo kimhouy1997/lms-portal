@@ -67,7 +67,7 @@ const routes: RouteObject[] = [
     element: <AuthGuard />,
     children: [
       {
-        element: <RoleGuard allowedRoles={["student"]} />,
+        element: <RoleGuard />,
         children: [
           {
             element: <StudentLayout />,
@@ -90,7 +90,7 @@ const routes: RouteObject[] = [
     element: <AuthGuard />,
     children: [
       {
-        element: <RoleGuard allowedRoles={['teacher']} />,
+        element: <RoleGuard />,
         children: [
           {
             element: <TeacherLayout />,
@@ -117,7 +117,7 @@ const routes: RouteObject[] = [
     element: <AuthGuard />,
     children: [
       {
-        element: <RoleGuard allowedRoles={['admin']} />,
+        element: <RoleGuard />,
         children: [
           {
             element: <AdminLayout />,

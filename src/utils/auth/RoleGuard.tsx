@@ -1,12 +1,15 @@
-import { Navigate, Outlet } from "react-router-dom";
-import { useAuth } from "@/hooks/useAuth";
+// import { Navigate, Outlet } from "react-router-dom";
+// import { useAuth } from "@/hooks/useAuth";
 
-type Props = {
-  allowedRoles: Array<"student" | "teacher" | "assistant" | "admin">;
-};
+import { Outlet } from "react-router-dom";
 
-export const RoleGuard = ({ allowedRoles }: Props) => {
-  const { user } = useAuth();
+// type Props = {
+//   allowedRoles: Array<"student" | "teacher" | "assistant" | "admin">;
+// };
+
+// export const RoleGuard = ({ allowedRoles }: Props) => {
+export const RoleGuard = () => {
+  // const { user } = useAuth();
 
   // if (!allowedRoles.includes(user!)) {
   //   return <Navigate to="/403" replace />;
