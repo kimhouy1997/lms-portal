@@ -1,15 +1,15 @@
-import { 
-  Box, 
-  Container, 
-  Typography, 
-  Button, 
-  Paper, 
-  alpha, 
+import {
+  Box,
+  Container,
+  Typography,
+  Button,
+  Paper,
+  alpha,
   useTheme,
   CircularProgress,
   Stack
 } from '@mui/material';
-import { 
+import {
   VerifiedUser,
   ErrorOutline,
   ArrowForward,
@@ -20,9 +20,11 @@ import { Link as RouterLink, useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ROUTES } from '@/constant/routers';
 import { useConfirmRegisterMutation } from '@root/src/redux/api/authApi';
+import { useTranslation } from 'react-i18next';
 
 const ConfirmRegister = () => {
   const theme = useTheme();
+  const { t } = useTranslation();
   const { uid, token } = useParams<{ uid: string; token: string }>();
   const [confirmEmail, { isLoading, isSuccess, isError, error }] = useConfirmRegisterMutation();
   const [hasRequested, setHasRequested] = useState(false);
@@ -40,10 +42,10 @@ const ConfirmRegister = () => {
         <Box sx={{ textAlign: 'center', py: 6 }}>
           <CircularProgress size={60} thickness={4} sx={{ mb: 4 }} />
           <Typography variant="h5" sx={{ fontWeight: 700, mb: 1 }}>
-            Verifying Your Account
+            {t('auth.confirm.verifying')}
           </Typography>
           <Typography variant="body1" color="text.secondary">
-            Please wait while we confirm your email address...
+            {t('auth.confirm.verifying_desc')}
           </Typography>
         </Box>
       );
@@ -80,13 +82,12 @@ const ConfirmRegister = () => {
             transition={{ delay: 0.2, duration: 0.5 }}
           >
             <Typography variant="h4" sx={{ fontWeight: 800, mb: 2 }}>
-              Account Verified!
+              {t('auth.confirm.success_title')}
             </Typography>
             <Typography variant="body1" color="text.secondary" sx={{ mb: 4, lineHeight: 1.6 }}>
-              Your email has been successfully verified. Your account is now active and ready to use. 
-              Join our community and start your learning journey today!
+              {t('auth.confirm.success_desc')}
             </Typography>
-            
+
             <Button
               component={RouterLink}
               to={`/${ROUTES.login}`}
@@ -103,7 +104,7 @@ const ConfirmRegister = () => {
                 boxShadow: `0 8px 25px ${alpha(theme.palette.primary.main, 0.3)}`
               }}
             >
-              Back to Login
+              {t('auth.register.back_to_login')}
             </Button>
           </motion.div>
         </Box>
@@ -111,8 +112,8 @@ const ConfirmRegister = () => {
     }
 
     if (isError) {
-      const errorMessage = (error as any)?.data?.error || (error as any)?.data?.message || 'The verification link is invalid or has expired.';
-      
+      const errorMessage = (error as any)?.data?.error || (error as any)?.data?.message || t('auth.confirm.failed_desc');
+
       return (
         <Box sx={{ textAlign: 'center', py: 4 }}>
           <motion.div
@@ -143,12 +144,12 @@ const ConfirmRegister = () => {
             transition={{ delay: 0.2, duration: 0.5 }}
           >
             <Typography variant="h4" sx={{ fontWeight: 800, mb: 2 }}>
-              Verification Failed
+              {t('auth.confirm.failed_title')}
             </Typography>
             <Typography variant="body1" color="text.secondary" sx={{ mb: 4, lineHeight: 1.6 }}>
               {errorMessage}
             </Typography>
-            
+
             <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} justifyContent="center">
               <Button
                 component={RouterLink}
@@ -164,7 +165,7 @@ const ConfirmRegister = () => {
                   textTransform: 'none',
                 }}
               >
-                Register Again
+                {t('auth.confirm.register_again')}
               </Button>
               <Button
                 component={RouterLink}
@@ -180,7 +181,7 @@ const ConfirmRegister = () => {
                   textTransform: 'none',
                 }}
               >
-                Go to Login
+                {t('auth.confirm.go_to_login')}
               </Button>
             </Stack>
           </motion.div>
@@ -191,10 +192,10 @@ const ConfirmRegister = () => {
     return (
       <Box sx={{ textAlign: 'center', py: 4 }}>
         <Typography variant="h5" sx={{ fontWeight: 700, mb: 2 }}>
-          Invalid Request
+          {t('auth.confirm.invalid_request')}
         </Typography>
         <Typography variant="body1" color="text.secondary" sx={{ mb: 4 }}>
-          No verification token was provided.
+          {t('auth.confirm.no_token')}
         </Typography>
         <Button
           component={RouterLink}
@@ -203,17 +204,17 @@ const ConfirmRegister = () => {
           startIcon={<ArrowForward />}
           sx={{ borderRadius: 3 }}
         >
-          Go Home
+          {t('nav.home')}
         </Button>
       </Box>
     );
   };
 
   return (
-    <Box sx={{ 
-      minHeight: '100vh', 
-      display: 'flex', 
-      alignItems: 'center', 
+    <Box sx={{
+      minHeight: '100vh',
+      display: 'flex',
+      alignItems: 'center',
       justifyContent: 'center',
       bgcolor: 'background.default',
       position: 'relative',
@@ -250,11 +251,11 @@ const ConfirmRegister = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <Paper 
+          <Paper
             elevation={0}
-            sx={{ 
-              p: { xs: 4, sm: 6 }, 
-              borderRadius: 6, 
+            sx={{
+              p: { xs: 4, sm: 6 },
+              borderRadius: 6,
               bgcolor: alpha(theme.palette.background.paper, 0.8),
               backdropFilter: 'blur(20px)',
               border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,

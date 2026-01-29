@@ -1,19 +1,19 @@
-import { 
-  Box, 
-  Container, 
-  Typography, 
-  Grid, 
-  Stack, 
-  alpha, 
+import {
+  Box,
+  Container,
+  Typography,
+  Grid,
+  Stack,
+  alpha,
   useTheme,
   Paper,
   Divider,
   IconButton
 } from '@mui/material';
-import { 
-  Groups, 
-  EmojiObjects, 
-  RocketLaunch, 
+import {
+  Groups,
+  EmojiObjects,
+  RocketLaunch,
   Public,
   Telegram,
   LinkedIn,
@@ -22,11 +22,13 @@ import {
 } from '@mui/icons-material';
 import { motion } from 'framer-motion';
 import { TeamCard, ContactForm } from '@/components/about';
+import { useTranslation } from 'react-i18next';
 
 const MotionBox = motion(Box);
 
 const About = () => {
   const theme = useTheme();
+  const { t } = useTranslation();
 
   const teamMembers = [
     {
@@ -64,34 +66,34 @@ const About = () => {
   ];
 
   const coreValues = [
-    { 
-      icon: <EmojiObjects color="primary" />, 
-      title: "Quality Content", 
-      desc: "We prioritize deep understanding over superficial learning. Our curriculum is updated constantly." 
+    {
+      icon: <EmojiObjects color="primary" />,
+      title: t('about.values.quality_title'),
+      desc: t('about.values.quality_desc')
     },
-    { 
-      icon: <Groups color="primary" />, 
-      title: "Community First", 
-      desc: "Learning is better together. We foster a supportive environment where students help each other." 
+    {
+      icon: <Groups color="primary" />,
+      title: t('about.values.community_title'),
+      desc: t('about.values.community_desc')
     },
-    { 
-      icon: <RocketLaunch color="primary" />, 
-      title: "Career Focused", 
-      desc: "Everything we teach is designed to help you get hired or start your own successful project." 
+    {
+      icon: <RocketLaunch color="primary" />,
+      title: t('about.values.career_title'),
+      desc: t('about.values.career_desc')
     },
-    { 
-      icon: <Public color="primary" />, 
-      title: "Global Standards", 
-      desc: "We bring international tech industry standards to the local market in Cambodia." 
+    {
+      icon: <Public color="primary" />,
+      title: t('about.values.global_title'),
+      desc: t('about.values.global_desc')
     }
   ];
 
   return (
     <Box>
       {/* 1. Hero Section */}
-      <Box sx={{ 
-        bgcolor: 'background.paper', 
-        pt: { xs: 10, md: 15 }, 
+      <Box sx={{
+        bgcolor: 'background.paper',
+        pt: { xs: 10, md: 15 },
         pb: { xs: 8, md: 12 },
         borderBottom: `1px solid ${theme.palette.divider}`,
         position: 'relative',
@@ -117,13 +119,15 @@ const About = () => {
                 transition={{ duration: 0.6 }}
               >
                 <Typography variant="overline" color="primary" sx={{ fontWeight: 800, letterSpacing: 2 }}>
-                  OUR MISSION
+                  {t('about.mission_label')}
                 </Typography>
                 <Typography variant="h1" sx={{ fontWeight: 900, mb: 3, fontSize: { xs: '2.5rem', md: '3.5rem' } }}>
-                  Empowering the next generation of <Box component="span" sx={{ color: 'primary.main' }}>Tech Leaders</Box>.
+                  {t('about.mission_title').split(t('about.mission_tech_leaders'))[0]}
+                  <Box component="span" sx={{ color: 'primary.main' }}>{t('about.mission_tech_leaders')}</Box>
+                  {t('about.mission_title').split(t('about.mission_tech_leaders'))[1]}
                 </Typography>
                 <Typography variant="h6" color="text.secondary" sx={{ mb: 4, fontWeight: 400, lineHeight: 1.6 }}>
-                  LMS Portal was founded with a single goal: to bridge the gap between academic education and industry demands. We provide cutting-edge web development training that transforms students into professionals.
+                  {t('about.mission_desc')}
                 </Typography>
               </MotionBox>
             </Grid>
@@ -133,8 +137,8 @@ const About = () => {
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.8 }}
               >
-                <Box 
-                  component="img" 
+                <Box
+                  component="img"
                   src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1200&q=80"
                   sx={{ width: '100%', borderRadius: 8, boxShadow: '0 20px 80px rgba(0,0,0,0.3)' }}
                 />
@@ -147,15 +151,15 @@ const About = () => {
       {/* 2. Core Values */}
       <Container maxWidth="lg" sx={{ py: 15 }}>
         <Typography variant="h3" sx={{ textAlign: 'center', mb: 8, fontWeight: 800 }}>
-          What drives us forward
+          {t('about.values_title')}
         </Typography>
         <Grid container spacing={4}>
           {coreValues.map((value, index) => (
             <Grid size={{ xs: 12, sm: 6, md: 3 }} key={index}>
-              <Paper sx={{ 
-                p: 4, 
-                height: '100%', 
-                borderRadius: 4, 
+              <Paper sx={{
+                p: 4,
+                height: '100%',
+                borderRadius: 4,
                 bgcolor: alpha(theme.palette.background.paper, 0.5),
                 textAlign: 'center'
               }}>
@@ -172,10 +176,10 @@ const About = () => {
       <Box sx={{ py: 15, bgcolor: alpha(theme.palette.primary.main, 0.02) }}>
         <Container maxWidth="lg">
           <Typography variant="h3" sx={{ textAlign: 'center', mb: 2, fontWeight: 800 }}>
-            Meet our experts
+            {t('about.team_title')}
           </Typography>
           <Typography variant="h6" color="text.secondary" sx={{ textAlign: 'center', mb: 10, maxWidth: 600, mx: 'auto' }}>
-            Our instructors are industry veterans committed to your success.
+            {t('about.team_subtitle')}
           </Typography>
           <Grid container spacing={4}>
             {teamMembers.map((member, index) => (
@@ -192,10 +196,12 @@ const About = () => {
         <Grid container spacing={8}>
           <Grid size={{ xs: 12, md: 5 }}>
             <Typography variant="h3" sx={{ fontWeight: 800, mb: 4 }}>
-              Let's build something <Box component="span" sx={{ color: 'primary.main' }}>amazing</Box> together.
+              {t('about.contact_title').split(t('about.contact_amazing'))[0]}
+              <Box component="span" sx={{ color: 'primary.main' }}>{t('about.contact_amazing')}</Box>
+              {t('about.contact_title').split(t('about.contact_amazing'))[1]}
             </Typography>
             <Typography variant="body1" color="text.secondary" sx={{ mb: 6, fontSize: '1.1rem' }}>
-              Whether you're a potential student, a hiring partner, or just want to say hi, we're here for you.
+              {t('about.contact_desc')}
             </Typography>
 
             <Stack spacing={4}>
@@ -204,7 +210,7 @@ const About = () => {
                   <Email />
                 </Paper>
                 <Box>
-                  <Typography variant="subtitle1" fontWeight={700}>Email us</Typography>
+                  <Typography variant="subtitle1" fontWeight={700}>{t('about.contact_labels.email')}</Typography>
                   <Typography variant="body1" color="text.secondary">hello@lmsportal.com</Typography>
                 </Box>
               </Box>
@@ -214,7 +220,7 @@ const About = () => {
                   <Telegram />
                 </Paper>
                 <Box>
-                  <Typography variant="subtitle1" fontWeight={700}>Telegram Channel</Typography>
+                  <Typography variant="subtitle1" fontWeight={700}>{t('about.contact_labels.telegram')}</Typography>
                   <Typography variant="body1" color="text.secondary">@lmsportal_community</Typography>
                 </Box>
               </Box>
@@ -224,7 +230,7 @@ const About = () => {
                   <LocationOn />
                 </Paper>
                 <Box>
-                  <Typography variant="subtitle1" fontWeight={700}>Our Location</Typography>
+                  <Typography variant="subtitle1" fontWeight={700}>{t('about.contact_labels.location')}</Typography>
                   <Typography variant="body1" color="text.secondary">Phnom Penh, Cambodia</Typography>
                 </Box>
               </Box>
@@ -232,7 +238,7 @@ const About = () => {
 
             <Divider sx={{ my: 6 }} />
 
-            <Typography variant="subtitle1" fontWeight={700} sx={{ mb: 2 }}>Follow us on social media</Typography>
+            <Typography variant="subtitle1" fontWeight={700} sx={{ mb: 2 }}>{t('about.contact_labels.follow_us')}</Typography>
             <Stack direction="row" spacing={2}>
               <IconButton color="primary" sx={{ bgcolor: alpha(theme.palette.primary.main, 0.05) }}><LinkedIn /></IconButton>
               <IconButton color="primary" sx={{ bgcolor: alpha(theme.palette.primary.main, 0.05) }}><Telegram /></IconButton>

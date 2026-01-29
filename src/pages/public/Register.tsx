@@ -23,7 +23,7 @@ import {
   Badge,
   Google,
   MarkEmailRead,
-  Login
+  Login as LoginIcon
 } from '@mui/icons-material';
 import Logo from '@/components/common/Logo';
 import { useState, useEffect } from 'react';
@@ -36,10 +36,12 @@ import { ROUTES } from '@/constant/routers';
 import { useRegisterMutation } from '@/redux/api/authApi';
 import { showToast } from '@/utils/toast';
 import { useAppSelector } from '@/redux/hooks';
+import { useTranslation } from 'react-i18next';
+
 const registerSchema = z.object({
   firstName: z.string().min(3, 'First name must be at least 3 characters'),
   lastName: z.string().min(3, 'Last name must be at least 3 characters'),
-  email: z.email('Invalid email address'),
+  email: z.string().email('Invalid email address'),
   password: z.string().min(6, 'Password must be at least 6 characters'),
   confirmPassword: z.string().min(6, 'Password must be at least 6 characters'),
 }).refine((data) => data.password === data.confirmPassword, {
@@ -52,6 +54,7 @@ type RegisterForm = z.infer<typeof registerSchema>;
 const Register = () => {
   const theme = useTheme();
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [showPassword, setShowPassword] = useState(false);
   const { user, isAuthenticated } = useAppSelector((state) => state.auth);
 
@@ -73,7 +76,6 @@ const Register = () => {
   const [registerApi, { isLoading, isSuccess }] = useRegisterMutation()
 
   const onSubmit = async (data: RegisterForm) => {
-    return console.log(data);
     try {
       await registerApi(data).unwrap();
     } catch (error: any) {
@@ -164,12 +166,10 @@ const Register = () => {
                   transition={{ delay: 0.2, duration: 0.5 }}
                 >
                   <Typography variant="h4" sx={{ fontWeight: 800, mb: 2 }}>
-                    Registration Successful!
+                    {t('auth.register.success_title')}
                   </Typography>
                   <Typography variant="body1" color="text.secondary" sx={{ mb: 4, lineHeight: 1.6 }}>
-                    Thank you for signing up. If the email address you provided belongs to you,
-                    you will receive a verification email shortly. Please check your inbox and
-                    follow the instructions to activate your account.
+                    {t('auth.register.success_desc')}
                   </Typography>
 
                   <Button
@@ -177,7 +177,7 @@ const Register = () => {
                     to={`/${ROUTES.login}`}
                     variant="contained"
                     size="large"
-                    startIcon={<Login />}
+                    startIcon={<LoginIcon />}
                     sx={{
                       borderRadius: 3,
                       px: 4,
@@ -187,7 +187,7 @@ const Register = () => {
                       boxShadow: `0 8px 20px ${alpha(theme.palette.primary.main, 0.3)}`
                     }}
                   >
-                    Back to Login
+                    {t('auth.register.back_to_login')}
                   </Button>
                 </motion.div>
               </Box>
@@ -196,10 +196,10 @@ const Register = () => {
                 <Box sx={{ mb: 4, textAlign: 'center' }}>
                   <Logo sx={{ mb: 3 }} fontSize="2rem" iconSize={40} />
                   <Typography variant="h4" sx={{ fontWeight: 800, mb: 1 }}>
-                    Create Account
+                    {t('auth.register.title')}
                   </Typography>
                   <Typography variant="body1" color="text.secondary">
-                    Join our learning community today
+                    {t('auth.register.subtitle')}
                   </Typography>
                 </Box>
 
@@ -209,7 +209,7 @@ const Register = () => {
                       <Grid size={{ xs: 12, sm: 6 }}>
                         <TextField
                           fullWidth
-                          label="First Name"
+                          label={t('auth.register.first_name')}
                           placeholder="John"
                           {...register('firstName')}
                           error={!!errors.firstName}
@@ -227,7 +227,7 @@ const Register = () => {
                       <Grid size={{ xs: 12, sm: 6 }}>
                         <TextField
                           fullWidth
-                          label="Last Name"
+                          label={t('auth.register.last_name')}
                           placeholder="Doe"
                           {...register('lastName')}
                           error={!!errors.lastName}
@@ -246,7 +246,7 @@ const Register = () => {
 
                     <TextField
                       fullWidth
-                      label="Email Address"
+                      label={t('auth.register.email')}
                       placeholder="hello@example.com"
                       {...register('email')}
                       error={!!errors.email}
@@ -263,7 +263,7 @@ const Register = () => {
 
                     <TextField
                       fullWidth
-                      label="Password"
+                      label={t('auth.register.password')}
                       type={showPassword ? 'text' : 'password'}
                       placeholder="••••••••"
                       {...register('password')}
@@ -292,7 +292,7 @@ const Register = () => {
 
                     <TextField
                       fullWidth
-                      label="Confirm Password"
+                      label={t('auth.register.confirm_password')}
                       type={showPassword ? 'text' : 'password'}
                       placeholder="••••••••"
                       {...register('confirmPassword')}
@@ -323,13 +323,13 @@ const Register = () => {
                         boxShadow: `0 8px 25px ${alpha(theme.palette.primary.main, 0.3)}`
                       }}
                     >
-                      {isLoading ? 'Creating account...' : 'Create Account'}
+                      {isLoading ? t('auth.register.signing_up') : t('auth.register.sign_up')}
                     </Button>
 
                     <Box sx={{ display: 'flex', alignItems: 'center', my: 2 }}>
                       <Divider sx={{ flex: 1 }} />
                       <Typography variant="body2" color="text.secondary" sx={{ px: 2 }}>
-                        OR
+                        {t('auth.login.or')}
                       </Typography>
                       <Divider sx={{ flex: 1 }} />
                     </Box>
@@ -354,17 +354,17 @@ const Register = () => {
                         }
                       }}
                     >
-                      Sign up with Google
+                      {t('auth.register.google_signup')}
                     </Button>
 
                     <Typography variant="body2" sx={{ textAlign: 'center', mt: 2 }}>
-                      Already have an account?{' '}
+                      {t('auth.register.has_account')}{' '}
                       <Link
                         component={RouterLink}
                         to={`/${ROUTES.login}`}
                         sx={{ fontWeight: 700, color: 'primary.main', textDecoration: 'none' }}
                       >
-                        Sign in
+                        {t('auth.register.sign_in')}
                       </Link>
                     </Typography>
                   </Stack>

@@ -1,25 +1,26 @@
 import { useState, useMemo, useEffect } from 'react';
-import { 
-  Container, 
-  Box, 
-  Grid, 
-  Stack, 
-  Button, 
-  useTheme, 
-  alpha, 
-  IconButton, 
-  Drawer, 
+import { useTranslation } from 'react-i18next';
+import {
+  Container,
+  Box,
+  Grid,
+  Stack,
+  Button,
+  useTheme,
+  alpha,
+  IconButton,
+  Drawer,
   Typography
 } from '@mui/material';
 import { Clear, Tune, School } from '@mui/icons-material';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useSearchParams } from 'react-router-dom';
 import { CourseCard } from '@/components/cards';
-import { 
-  CourseHero, 
-  CourseFilters, 
-  CourseSortControls, 
-  ActiveFilterBar 
+import {
+  CourseHero,
+  CourseFilters,
+  CourseSortControls,
+  ActiveFilterBar
 } from '@/components/courses';
 import { CATEGORIES, MOCK_COURSES } from '@/constant/course';
 
@@ -27,6 +28,7 @@ const MotionBox = motion(Box);
 
 const Courses = () => {
   const theme = useTheme();
+  const { t } = useTranslation();
   const [searchParams, setSearchParams] = useSearchParams();
 
   // State
@@ -51,8 +53,8 @@ const Courses = () => {
   // Filtering Logic
   const filteredCourses = useMemo(() => {
     return MOCK_COURSES.filter(course => {
-      const matchesSearch = course.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                            course.instructor.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesSearch = course.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        course.instructor.toLowerCase().includes(searchQuery.toLowerCase());
       const matchesCategory = selectedCategory === 'All' || course.category === selectedCategory;
       const matchesPrice = course.rawPrice >= priceRange[0] && course.rawPrice <= priceRange[1];
       const matchesLevel = selectedLevels.length === 0 || selectedLevels.includes(course.level);
@@ -69,7 +71,7 @@ const Courses = () => {
   }, [searchQuery, selectedCategory, sortBy, priceRange, selectedLevels]);
 
   const toggleLevel = (level: string) => {
-    setSelectedLevels(prev => 
+    setSelectedLevels(prev =>
       prev.includes(level) ? prev.filter(l => l !== level) : [...prev, level]
     );
   };
@@ -84,7 +86,7 @@ const Courses = () => {
 
   return (
     <Box>
-      <CourseHero 
+      <CourseHero
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
         selectedCategory={selectedCategory}
@@ -99,9 +101,9 @@ const Courses = () => {
             <Box sx={{ position: 'sticky', top: 100 }}>
               <Stack direction="row" alignItems="center" spacing={1} mb={4}>
                 <Tune color="primary" />
-                <Typography variant="h6" fontWeight={700}>Filters</Typography>
+                <Typography variant="h6" fontWeight={700}>{t('courses.filters')}</Typography>
               </Stack>
-              <CourseFilters 
+              <CourseFilters
                 categories={CATEGORIES}
                 selectedCategory={selectedCategory}
                 onCategoryChange={setSelectedCategory}
@@ -116,14 +118,14 @@ const Courses = () => {
 
           {/* Main Course List */}
           <Grid size={{ xs: 12, md: 9 }}>
-            <CourseSortControls 
+            <CourseSortControls
               count={filteredCourses.length}
               sortBy={sortBy}
               onSortChange={setSortBy}
               onOpenFilter={() => setMobileFilterOpen(true)}
             />
 
-            <ActiveFilterBar 
+            <ActiveFilterBar
               searchQuery={searchQuery}
               onSearchClear={() => setSearchQuery('')}
               selectedCategory={selectedCategory}
@@ -151,17 +153,17 @@ const Courses = () => {
                   ))
                 ) : (
                   <Grid size={{ xs: 12 }}>
-                    <Box sx={{ 
-                      py: 10, 
-                      textAlign: 'center', 
+                    <Box sx={{
+                      py: 10,
+                      textAlign: 'center',
                       bgcolor: alpha(theme.palette.background.paper, 0.5),
                       borderRadius: 4,
                       border: `2px dashed ${theme.palette.divider}`
                     }}>
                       <School sx={{ fontSize: 60, color: 'text.disabled', mb: 2 }} />
-                      <Typography variant="h5" color="text.secondary">No courses found</Typography>
-                      <Typography variant="body2" color="text.disabled">Try adjusting your filters or search query</Typography>
-                      <Button sx={{ mt: 3 }} onClick={clearFilters}>View All Courses</Button>
+                      <Typography variant="h5" color="text.secondary">{t('courses.no_results')}</Typography>
+                      <Typography variant="body2" color="text.disabled">{t('courses.no_results_desc')}</Typography>
+                      <Button sx={{ mt: 3 }} onClick={clearFilters}>{t('courses.view_all')}</Button>
                     </Box>
                   </Grid>
                 )}
@@ -170,9 +172,9 @@ const Courses = () => {
 
             {filteredCourses.length > 0 && (
               <Box sx={{ mt: 8, textAlign: 'center' }}>
-                <Button 
-                  variant="outlined" 
-                  size="large" 
+                <Button
+                  variant="outlined"
+                  size="large"
                   sx={{ borderRadius: 3, px: 6, py: 1.5, fontWeight: 700 }}
                 >
                   Load More Courses
@@ -200,7 +202,7 @@ const Courses = () => {
               <Clear />
             </IconButton>
           </Stack>
-          <CourseFilters 
+          <CourseFilters
             categories={CATEGORIES}
             selectedCategory={selectedCategory}
             onCategoryChange={setSelectedCategory}
@@ -210,10 +212,10 @@ const Courses = () => {
             onPriceChange={(val) => setPriceRange([0, val])}
             onClear={clearFilters}
           />
-          <Button 
-            variant="contained" 
-            fullWidth 
-            size="large" 
+          <Button
+            variant="contained"
+            fullWidth
+            size="large"
             onClick={() => setMobileFilterOpen(false)}
             sx={{ mt: 4, mb: 2, py: 2, borderRadius: 3 }}
           >

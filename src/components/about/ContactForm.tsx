@@ -1,10 +1,10 @@
-import { 
-  Typography, 
-  TextField, 
-  Button, 
-  Stack, 
-  Paper, 
-  alpha, 
+import {
+  Typography,
+  TextField,
+  Button,
+  Stack,
+  Paper,
+  alpha,
   useTheme,
   Grid
 } from '@mui/material';
@@ -12,6 +12,7 @@ import { Send } from '@mui/icons-material';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
+import { useTranslation } from 'react-i18next';
 
 const contactSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
@@ -24,7 +25,8 @@ type ContactFormInputs = z.infer<typeof contactSchema>;
 
 const ContactForm = () => {
   const theme = useTheme();
-  
+  const { t } = useTranslation();
+
   const {
     register,
     handleSubmit,
@@ -37,20 +39,20 @@ const ContactForm = () => {
   const onSubmit = async (data: ContactFormInputs) => {
     console.log('Contact form data:', data);
     await new Promise(resolve => setTimeout(resolve, 1500));
-    alert('Thank you for your message! We will get back to you soon.');
+    alert(t('contact_form.success'));
     reset();
   };
 
   return (
-    <Paper sx={{ 
-      p: { xs: 4, md: 6 }, 
-      borderRadius: 6, 
+    <Paper sx={{
+      p: { xs: 4, md: 6 },
+      borderRadius: 6,
       bgcolor: 'background.paper',
       border: `1px solid ${alpha(theme.palette.divider, 0.1)}`
     }}>
-      <Typography variant="h4" sx={{ fontWeight: 800, mb: 1 }}>Get in Touch</Typography>
+      <Typography variant="h4" sx={{ fontWeight: 800, mb: 1 }}>{t('contact_form.title')}</Typography>
       <Typography variant="body1" color="text.secondary" sx={{ mb: 4 }}>
-        Have questions? We'd love to hear from you.
+        {t('contact_form.subtitle')}
       </Typography>
 
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -59,8 +61,8 @@ const ContactForm = () => {
             <Grid size={{ xs: 12, sm: 6 }}>
               <TextField
                 fullWidth
-                label="Your Name"
-                placeholder="John Doe"
+                label={t('contact_form.labels.name')}
+                placeholder={t('contact_form.placeholders.name')}
                 {...register('name')}
                 error={!!errors.name}
                 helperText={errors.name?.message}
@@ -70,8 +72,8 @@ const ContactForm = () => {
             <Grid size={{ xs: 12, sm: 6 }}>
               <TextField
                 fullWidth
-                label="Email Address"
-                placeholder="john@example.com"
+                label={t('contact_form.labels.email')}
+                placeholder={t('contact_form.placeholders.email')}
                 {...register('email')}
                 error={!!errors.email}
                 helperText={errors.email?.message}
@@ -79,11 +81,11 @@ const ContactForm = () => {
               />
             </Grid>
           </Grid>
-          
+
           <TextField
             fullWidth
-            label="Subject"
-            placeholder="How can we help?"
+            label={t('contact_form.labels.subject')}
+            placeholder={t('contact_form.placeholders.subject')}
             {...register('subject')}
             error={!!errors.subject}
             helperText={errors.subject?.message}
@@ -92,8 +94,8 @@ const ContactForm = () => {
 
           <TextField
             fullWidth
-            label="Message"
-            placeholder="Tell us more about your inquiry..."
+            label={t('contact_form.labels.message')}
+            placeholder={t('contact_form.placeholders.message')}
             multiline
             rows={4}
             {...register('message')}
@@ -108,15 +110,15 @@ const ContactForm = () => {
             size="large"
             disabled={isSubmitting}
             startIcon={<Send />}
-            sx={{ 
-              py: 2, 
-              borderRadius: 3, 
+            sx={{
+              py: 2,
+              borderRadius: 3,
               fontWeight: 700,
               textTransform: 'none',
               boxShadow: `0 8px 25px ${alpha(theme.palette.primary.main, 0.3)}`
             }}
           >
-            {isSubmitting ? 'Sending...' : 'Send Message'}
+            {isSubmitting ? t('contact_form.submitting') : t('contact_form.submit')}
           </Button>
         </Stack>
       </form>

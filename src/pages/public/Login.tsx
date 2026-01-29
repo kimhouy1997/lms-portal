@@ -32,6 +32,7 @@ import { useLoginMutation } from '@/redux/api/authApi';
 import { showToast } from '@/utils/toast';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { setCredentials } from '@/redux/slices/authSlice';
+import { useTranslation } from 'react-i18next';
 
 const loginSchema = z.object({
   email: z.string().email('Invalid email address'),
@@ -44,6 +45,7 @@ const Login = () => {
   const theme = useTheme();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const { t } = useTranslation();
   const [showPassword, setShowPassword] = useState(false);
   const { user, isAuthenticated } = useAppSelector((state) => state.auth);
 
@@ -136,10 +138,10 @@ const Login = () => {
             <Box sx={{ mb: 4, textAlign: 'center' }}>
               <Logo sx={{ mb: 3 }} fontSize="2rem" iconSize={40} />
               <Typography variant="h4" sx={{ fontWeight: 800, mb: 1 }}>
-                Welcome Back
+                {t('auth.login.title')}
               </Typography>
               <Typography variant="body1" color="text.secondary">
-                Please enter your details to sign in
+                {t('auth.login.subtitle')}
               </Typography>
             </Box>
 
@@ -147,7 +149,7 @@ const Login = () => {
               <Stack spacing={3}>
                 <TextField
                   fullWidth
-                  label="Email Address"
+                  label={t('auth.login.email')}
                   placeholder="hello@example.com"
                   {...register('email')}
                   error={!!errors.email}
@@ -166,7 +168,7 @@ const Login = () => {
 
                 <TextField
                   fullWidth
-                  label="Password"
+                  label={t('auth.login.password')}
                   type={showPassword ? 'text' : 'password'}
                   placeholder="••••••••"
                   {...register('password')}
@@ -202,7 +204,7 @@ const Login = () => {
                     variant="body2"
                     sx={{ fontWeight: 600, color: 'primary.main', textDecoration: 'none' }}
                   >
-                    Forgot password?
+                    {t('auth.login.forgot_password')}
                   </Link>
                 </Box>
 
@@ -222,13 +224,13 @@ const Login = () => {
                     boxShadow: `0 8px 25px ${alpha(theme.palette.primary.main, 0.3)}`
                   }}
                 >
-                  {isSubmitting ? 'Signing in...' : 'Sign In'}
+                  {isSubmitting ? t('auth.login.signing_in') : t('auth.login.sign_in')}
                 </Button>
 
                 <Box sx={{ display: 'flex', alignItems: 'center', my: 2 }}>
                   <Divider sx={{ flex: 1 }} />
                   <Typography variant="body2" color="text.secondary" sx={{ px: 2 }}>
-                    OR
+                    {t('auth.login.or')}
                   </Typography>
                   <Divider sx={{ flex: 1 }} />
                 </Box>
@@ -253,17 +255,17 @@ const Login = () => {
                     }
                   }}
                 >
-                  Continue with Google
+                  {t('auth.login.google_login')}
                 </Button>
 
                 <Typography variant="body2" sx={{ textAlign: 'center', mt: 2 }}>
-                  Don't have an account?{' '}
+                  {t('auth.login.no_account')}{' '}
                   <Link
                     component={RouterLink}
                     to={`/${ROUTES.register}`}
                     sx={{ fontWeight: 700, color: 'primary.main', textDecoration: 'none' }}
                   >
-                    Sign up
+                    {t('auth.login.sign_up')}
                   </Link>
                 </Typography>
               </Stack>

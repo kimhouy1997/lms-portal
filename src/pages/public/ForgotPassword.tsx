@@ -23,6 +23,7 @@ import { motion } from 'framer-motion';
 import { ROUTES } from '@/constant/routers';
 import { useForgotPasswordMutation } from '@/redux/api/authApi';
 import { showToast } from '@/utils/toast';
+import { useTranslation } from 'react-i18next';
 
 const forgotPasswordSchema = z.object({
   email: z.string().email('Invalid email address'),
@@ -32,6 +33,7 @@ type ForgotPasswordForm = z.infer<typeof forgotPasswordSchema>;
 
 export const ForgotPassword = () => {
   const theme = useTheme();
+  const { t } = useTranslation();
 
   const {
     register,
@@ -130,11 +132,10 @@ export const ForgotPassword = () => {
                 </motion.div>
 
                 <Typography variant="h4" sx={{ fontWeight: 800, mb: 2 }}>
-                  Check Your Email
+                  {t('auth.forgot_password.success_title')}
                 </Typography>
                 <Typography variant="body1" color="text.secondary" sx={{ mb: 4, lineHeight: 1.6 }}>
-                  If an account exists for that email, we have sent password reset instructions.
-                  Please check your inbox and spam folder.
+                  {t('auth.forgot_password.success_desc')}
                 </Typography>
 
                 <Button
@@ -151,7 +152,7 @@ export const ForgotPassword = () => {
                     textTransform: 'none'
                   }}
                 >
-                  Back to Login
+                  {t('auth.register.back_to_login')}
                 </Button>
               </Box>
             ) : (
@@ -159,10 +160,10 @@ export const ForgotPassword = () => {
                 <Box sx={{ mb: 4, textAlign: 'center' }}>
                   <Logo sx={{ mb: 3 }} fontSize="2rem" iconSize={40} />
                   <Typography variant="h4" sx={{ fontWeight: 800, mb: 1 }}>
-                    Forgot Password
+                    {t('auth.login.forgot_password')}
                   </Typography>
                   <Typography variant="body1" color="text.secondary">
-                    Enter your email to reset your password
+                    {t('auth.forgot_password.subtitle')}
                   </Typography>
                 </Box>
 
@@ -170,7 +171,7 @@ export const ForgotPassword = () => {
                   <Stack spacing={3}>
                     <TextField
                       fullWidth
-                      label="Email Address"
+                      label={t('auth.login.email')}
                       placeholder="hello@example.com"
                       {...register('email')}
                       error={!!errors.email}
@@ -202,11 +203,11 @@ export const ForgotPassword = () => {
                         boxShadow: `0 8px 25px ${alpha(theme.palette.primary.main, 0.3)}`
                       }}
                     >
-                      {isLoading ? 'Sending...' : 'Send Reset Link'}
+                      {isLoading ? t('contact_form.submitting') : t('auth.forgot_password.send_link')}
                     </Button>
 
                     <Typography variant="body2" sx={{ textAlign: 'center', mt: 2 }}>
-                      Remember your password?{' '}
+                      {t('auth.forgot_password.remember_password')}{' '}
                       <Typography
                         component={RouterLink}
                         to={`/${ROUTES.login}`}
@@ -217,7 +218,7 @@ export const ForgotPassword = () => {
                           '&:hover': { textDecoration: 'underline' }
                         }}
                       >
-                        Sign in
+                        {t('auth.login.sign_in')}
                       </Typography>
                     </Typography>
                   </Stack>

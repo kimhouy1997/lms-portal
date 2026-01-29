@@ -1,17 +1,18 @@
-import { 
-  Box, 
-  Container, 
-  Typography, 
-  Stack, 
-  TextField, 
-  InputAdornment, 
-  IconButton, 
-  Chip, 
-  alpha, 
-  useTheme 
+import {
+  Box,
+  Container,
+  Typography,
+  Stack,
+  TextField,
+  InputAdornment,
+  IconButton,
+  Chip,
+  alpha,
+  useTheme
 } from '@mui/material';
 import { Search, Clear } from '@mui/icons-material';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 
 const MotionTypography = motion(Typography);
 
@@ -23,19 +24,20 @@ interface CourseHeroProps {
   categories: string[];
 }
 
-const CourseHero = ({ 
-  searchQuery, 
-  onSearchChange, 
-  selectedCategory, 
-  onCategoryChange, 
-  categories 
+const CourseHero = ({
+  searchQuery,
+  onSearchChange,
+  selectedCategory,
+  onCategoryChange,
+  categories
 }: CourseHeroProps) => {
   const theme = useTheme();
+  const { t } = useTranslation();
 
   return (
-    <Box sx={{ 
-      bgcolor: 'background.paper', 
-      pt: { xs: 10, md: 15 }, 
+    <Box sx={{
+      bgcolor: 'background.paper',
+      pt: { xs: 10, md: 15 },
       pb: { xs: 8, md: 10 },
       borderBottom: `1px solid ${theme.palette.divider}`,
       position: 'relative',
@@ -54,22 +56,22 @@ const CourseHero = ({
 
       <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 1 }}>
         <Stack spacing={4} alignItems="center" textAlign="center">
-          <MotionTypography 
-            variant="h2" 
+          <MotionTypography
+            variant="h2"
             sx={{ fontWeight: 900, mb: 1 }}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
           >
-            Explore Our Courses
+            {t('courses.title')}
           </MotionTypography>
           <Typography variant="h6" color="text.secondary" sx={{ maxWidth: 600 }}>
-            Master new skills with our professional curriculum designed by industry experts.
+            {t('courses.subtitle')}
           </Typography>
 
           <Box sx={{ width: '100%', maxWidth: 700 }}>
             <TextField
               fullWidth
-              placeholder="Search for titles, skills, or instructors..."
+              placeholder={t('common.search')}
               value={searchQuery}
               onChange={(e) => onSearchChange(e.target.value)}
               autoComplete="off"
@@ -100,12 +102,12 @@ const CourseHero = ({
 
           <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap gap={1} justifyContent="center">
             {categories.slice(0, 5).map(cat => (
-              <Chip 
-                key={cat} 
-                label={cat} 
+              <Chip
+                key={cat}
+                label={cat}
                 variant="outlined"
                 onClick={() => onCategoryChange(cat)}
-                sx={{ 
+                sx={{
                   cursor: 'pointer',
                   bgcolor: selectedCategory === cat ? 'primary.main' : 'transparent',
                   color: selectedCategory === cat ? 'white' : 'inherit',

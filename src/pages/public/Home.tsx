@@ -47,9 +47,9 @@ const Home = () => {
   return (
     <Box>
       {/* Hero Section */}
-      <Box sx={{ 
-        position: 'relative', 
-        pt: { xs: 8, md: 15 }, 
+      <Box sx={{
+        position: 'relative',
+        pt: { xs: 8, md: 15 },
         pb: { xs: 8, md: 20 },
         overflow: 'hidden'
       }}>
@@ -73,9 +73,9 @@ const Home = () => {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.8 }}
               >
-                <MotionTypography 
-                  variant="h1" 
-                  sx={{ 
+                <MotionTypography
+                  variant="h1"
+                  sx={{
                     fontSize: { xs: '2.5rem', md: '4rem' },
                     mb: 3,
                     background: `linear-gradient(135deg, #fff 0%, ${theme.palette.primary.main} 100%)`,
@@ -89,16 +89,16 @@ const Home = () => {
                   {t('hero.description')}
                 </Typography>
                 <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
-                  <Button 
-                    variant="contained" 
-                    size="large" 
+                  <Button
+                    variant="contained"
+                    size="large"
                     startIcon={<RocketLaunch />}
                     sx={{ py: 2, px: 4, borderRadius: 3, fontSize: '1.1rem' }}
                   >
                     {t('hero.cta_primary')}
                   </Button>
-                  <Button 
-                    variant="outlined" 
+                  <Button
+                    variant="outlined"
                     size="large"
                     sx={{ py: 2, px: 4, borderRadius: 3, fontSize: '1.1rem' }}
                   >
@@ -141,7 +141,7 @@ const Home = () => {
                   </Box>
                   <Box>
                     <Typography variant="h6" sx={{ fontWeight: 700 }}>10k+</Typography>
-                    <Typography variant="body2" color="text.secondary">Active Learners</Typography>
+                    <Typography variant="body2" color="text.secondary">{t('home.stats.active_learners')}</Typography>
                   </Box>
                 </Paper>
               </MotionBox>
@@ -154,8 +154,8 @@ const Home = () => {
       <Container maxWidth="lg" sx={{ py: 15 }}>
         <Box sx={{ mb: 8, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: 2 }}>
           <Box>
-            <MotionTypography 
-              variant="h3" 
+            <MotionTypography
+              variant="h3"
               sx={{ fontWeight: 700, mb: 2 }}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -191,11 +191,11 @@ const Home = () => {
       {/* Promotion Section */}
       <Box sx={{ py: 15, bgcolor: 'rgba(100, 108, 255, 0.05)' }}>
         <Container maxWidth="lg">
-          <Paper 
+          <Paper
             elevation={0}
-            sx={{ 
-              p: { xs: 4, md: 8 }, 
-              borderRadius: 8, 
+            sx={{
+              p: { xs: 4, md: 8 },
+              borderRadius: 8,
               background: `linear-gradient(135deg, ${theme.palette.primary.dark} 0%, ${theme.palette.primary.main} 100%)`,
               position: 'relative',
               overflow: 'hidden'
@@ -203,7 +203,7 @@ const Home = () => {
           >
             {/* Decorative Stars */}
             <Stars sx={{ position: 'absolute', top: 20, right: 20, fontSize: 100, opacity: 0.1, color: 'white' }} />
-            
+
             <Grid container spacing={4} alignItems="center">
               <Grid size={{ xs: 12, md: 8 }}>
                 <MotionBox
@@ -217,12 +217,12 @@ const Home = () => {
                   <Typography variant="h5" color="rgba(255,255,255,0.8)" sx={{ mb: 4 }}>
                     {t('promo.description')}
                   </Typography>
-                  <Button 
-                    variant="contained" 
-                    color="inherit" 
+                  <Button
+                    variant="contained"
+                    color="inherit"
                     size="large"
-                    sx={{ 
-                      color: 'primary.main', 
+                    sx={{
+                      color: 'primary.main',
                       bgcolor: 'white',
                       px: 6,
                       py: 1.5,
@@ -255,9 +255,9 @@ const Home = () => {
       <Container maxWidth="lg" sx={{ py: 15 }}>
         <Grid container spacing={8} justifyContent="center">
           {[
-            { icon: <School sx={{ fontSize: 40 }} />, count: '500+', label: 'Expert Instructors' },
-            { icon: <Stars sx={{ fontSize: 40 }} />, count: '4.9/5', label: 'Average Rating' },
-            { icon: <People sx={{ fontSize: 40 }} />, count: '100k+', label: 'Trusted Students' },
+            { icon: <School sx={{ fontSize: 40 }} />, count: '500+', label: t('home.stats.expert_instructors') },
+            { icon: <Stars sx={{ fontSize: 40 }} />, count: '4.9/5', label: t('home.stats.average_rating') },
+            { icon: <People sx={{ fontSize: 40 }} />, count: '100k+', label: t('home.stats.trusted_students') },
           ].map((stat, index) => (
             <Grid size={{ xs: 12, sm: 4 }} key={index} sx={{ textAlign: 'center' }}>
               <MotionBox
