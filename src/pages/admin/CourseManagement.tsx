@@ -3,28 +3,19 @@ import {
     Box,
     Typography,
     Button,
-    Stack,
     TextField,
-    Avatar,
-    Chip,
     Dialog,
     DialogTitle,
     DialogContent,
     DialogActions,
-    Grid,
     useTheme,
     alpha,
-    FormControl,
-    InputLabel,
-    Select,
-    MenuItem,
-    IconButton,
     InputAdornment,
     Menu,
+    MenuItem,
     ListItemIcon,
     ListItemText,
     Divider,
-    type SelectChangeEvent
 } from '@mui/material';
 import {
     Add,
@@ -32,57 +23,17 @@ import {
     Edit,
     Delete,
     Visibility,
-    School,
-    AttachMoney,
-    SignalCellularAlt,
-    MoreVert
 } from '@mui/icons-material';
-import { DataTable, type Column } from '@/components/common/DataTable';
-
-// Types based on provided Django Models
-export const CourseStatus = {
-    DRAFT: 'draft',
-    PUBLISHED: 'published',
-    ARCHIVED: 'archived'
-} as const;
-export type CourseStatus = typeof CourseStatus[keyof typeof CourseStatus];
-
-export const DifficultyLevel = {
-    BEGINNER: 'beginner',
-    INTERMEDIATE: 'intermediate',
-    ADVANCED: 'advanced'
-} as const;
-export type DifficultyLevel = typeof DifficultyLevel[keyof typeof DifficultyLevel];
-
-export interface Technology {
-    id: number;
-    name: string;
-    thumbnail?: string;
-    description?: string;
-}
-
-export interface Chapter {
-    id: number;
-    title: string;
-    description?: string;
-    status: CourseStatus;
-}
-
-export interface Course {
-    id: number;
-    title: string;
-    description?: string;
-    slug: string;
-    short_summary?: string;
-    thumbnail?: string;
-    price: number;
-    level: DifficultyLevel;
-    status: CourseStatus;
-    technologies: Technology[];
-    chapters: Chapter[];
-    createdAt: string;
-    updatedAt: string;
-}
+import type {
+    Course,
+    Technology
+} from '@/types/adminCourse';
+import {
+    CourseStatus,
+    DifficultyLevel
+} from '@/types/adminCourse';
+import CourseTable from '@/components/admin/CourseTable';
+import CourseForm from '@/components/admin/CourseForm';
 
 // Mock Data
 const initialTechnologies: Technology[] = [
@@ -99,6 +50,7 @@ const mockCourses: Course[] = [
         slug: 'mastering-react-nextjs-14',
         short_summary: 'Learn the latest features of React and Next.js by building real-world projects.',
         price: 99.99,
+        is_free: false,
         level: DifficultyLevel.ADVANCED,
         status: CourseStatus.PUBLISHED,
         technologies: [initialTechnologies[0], initialTechnologies[1], initialTechnologies[2]],
@@ -111,7 +63,8 @@ const mockCourses: Course[] = [
         title: 'Python for Data Science',
         slug: 'python-for-data-science',
         short_summary: 'Comprehensive guide to Python for data analysis and visualization.',
-        price: 79.50,
+        price: 0,
+        is_free: true,
         level: DifficultyLevel.INTERMEDIATE,
         status: CourseStatus.DRAFT,
         technologies: [initialTechnologies[3]],
@@ -125,6 +78,7 @@ const mockCourses: Course[] = [
         slug: 'modern-ui-ux-design',
         short_summary: 'Designing beautiful and functional user interfaces from scratch.',
         price: 49.99,
+        is_free: false,
         level: DifficultyLevel.BEGINNER,
         status: CourseStatus.ARCHIVED,
         technologies: [],
@@ -160,6 +114,7 @@ const CourseManagement = () => {
         title: '',
         short_summary: '',
         price: 0,
+        is_free: false,
         level: DifficultyLevel.BEGINNER,
         status: CourseStatus.DRAFT,
         technologies: []
@@ -175,6 +130,7 @@ const CourseManagement = () => {
                 title: '',
                 short_summary: '',
                 price: 0,
+                is_free: false,
                 level: DifficultyLevel.BEGINNER,
                 status: CourseStatus.DRAFT,
                 technologies: []
@@ -210,112 +166,6 @@ const CourseManagement = () => {
         }
         handleCloseModal();
     };
-
-    const columns: Column<Course>[] = [
-        {
-            id: 'title',
-            label: 'Course Info',
-            minWidth: 300,
-            format: (_, row) => (
-                <Stack direction="row" spacing={2} alignItems="center">
-                    <Avatar
-                        variant="rounded"
-                        sx={{
-                            width: 48,
-                            height: 48,
-                            bgcolor: alpha(theme.palette.primary.main, 0.1),
-                            color: 'primary.main',
-                            borderRadius: 2
-                        }}
-                    >
-                        <School />
-                    </Avatar>
-                    <Box sx={{ maxWidth: 250 }}>
-                        <Typography variant="body2" sx={{ fontWeight: 800 }} noWrap>
-                            {row.title}
-                        </Typography>
-                        <Typography variant="caption" color="text.secondary" noWrap display="block">
-                            {row.short_summary || 'No summary provided'}
-                        </Typography>
-                    </Box>
-                </Stack>
-            )
-        },
-        {
-            id: 'price',
-            label: 'Pricing',
-            minWidth: 120,
-            format: (value) => (
-                <Stack direction="row" spacing={0.5} alignItems="center">
-                    <AttachMoney sx={{ fontSize: 16, color: 'text.secondary' }} />
-                    <Typography variant="body2" sx={{ fontWeight: 700 }}>
-                        {Number(value).toFixed(2)}
-                    </Typography>
-                </Stack>
-            )
-        },
-        {
-            id: 'level',
-            label: 'Difficulty',
-            minWidth: 150,
-            format: (value) => {
-                let color: 'success' | 'warning' | 'error' = 'success';
-                if (value === DifficultyLevel.INTERMEDIATE) color = 'warning';
-                if (value === DifficultyLevel.ADVANCED) color = 'error';
-
-                return (
-                    <Chip
-                        icon={<SignalCellularAlt sx={{ fontSize: '14px !important' }} />}
-                        label={String(value).toUpperCase()}
-                        size="small"
-                        color={color}
-                        sx={{ fontWeight: 900, fontSize: '0.65rem', borderRadius: 1.5 }}
-                    />
-                );
-            }
-        },
-        {
-            id: 'status',
-            label: 'Status',
-            minWidth: 130,
-            format: (value) => (
-                <Chip
-                    label={String(value).toUpperCase()}
-                    size="small"
-                    variant="outlined"
-                    sx={{
-                        fontWeight: 900,
-                        fontSize: '0.65rem',
-                        borderRadius: 1.5,
-                        borderColor: value === CourseStatus.PUBLISHED ? 'success.main' : value === CourseStatus.DRAFT ? 'warning.main' : 'error.main',
-                        color: value === CourseStatus.PUBLISHED ? 'success.main' : value === CourseStatus.DRAFT ? 'warning.main' : 'error.main',
-                        bgcolor: alpha(value === CourseStatus.PUBLISHED ? theme.palette.success.main : value === CourseStatus.DRAFT ? theme.palette.warning.main : theme.palette.error.main, 0.05)
-                    }}
-                />
-            )
-        },
-        {
-            id: 'actions',
-            label: 'Management',
-            align: 'right',
-            minWidth: 150,
-            format: (_, row) => (
-                <Stack direction="row" spacing={1} justifyContent="flex-end">
-                    <IconButton
-                        size="small"
-                        onClick={(e) => handleMenuOpen(e, row)}
-                        sx={{
-                            bgcolor: anchorEl && selectedCourse?.id === row.id ? alpha(theme.palette.primary.main, 0.1) : 'transparent',
-                            color: anchorEl && selectedCourse?.id === row.id ? 'primary.main' : 'text.secondary',
-                            '&:hover': { bgcolor: alpha(theme.palette.primary.main, 0.05) }
-                        }}
-                    >
-                        <MoreVert fontSize="small" />
-                    </IconButton>
-                </Stack>
-            )
-        }
-    ];
 
     const filteredCourses = courses.filter(course =>
         course.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -372,14 +222,15 @@ const CourseManagement = () => {
             </Box>
 
             {/* Content Table */}
-            <DataTable
-                columns={columns}
-                data={filteredCourses}
-                totalCount={filteredCourses.length}
+            <CourseTable
+                courses={filteredCourses}
                 page={page}
                 rowsPerPage={rowsPerPage}
                 onPageChange={setPage}
                 onRowsPerPageChange={setRowsPerPage}
+                onMenuOpen={handleMenuOpen}
+                anchorEl={anchorEl}
+                selectedCourse={selectedCourse}
             />
 
             {/* Course Modal */}
@@ -399,72 +250,10 @@ const CourseManagement = () => {
                     </Typography>
                 </DialogTitle>
                 <DialogContent>
-                    <Grid container spacing={3} sx={{ mt: 0 }}>
-                        <Grid size={{ xs: 12 }}>
-                            <TextField
-                                fullWidth
-                                label="Course Title"
-                                value={formData.title}
-                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, title: e.target.value })}
-                                required
-                                sx={{ '& .MuiOutlinedInput-root': { borderRadius: 3 } }}
-                            />
-                        </Grid>
-                        <Grid size={{ xs: 12 }}>
-                            <TextField
-                                fullWidth
-                                multiline
-                                rows={2}
-                                label="Short Summary"
-                                value={formData.short_summary}
-                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, short_summary: e.target.value })}
-                                sx={{ '& .MuiOutlinedInput-root': { borderRadius: 3 } }}
-                            />
-                        </Grid>
-                        <Grid size={{ xs: 12, md: 6 }}>
-                            <TextField
-                                fullWidth
-                                type="number"
-                                label="Price ($)"
-                                value={formData.price}
-                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, price: Number(e.target.value) })}
-                                InputProps={{
-                                    startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                                }}
-                                sx={{ '& .MuiOutlinedInput-root': { borderRadius: 3 } }}
-                            />
-                        </Grid>
-                        <Grid size={{ xs: 12, md: 6 }}>
-                            <FormControl fullWidth>
-                                <InputLabel>Difficulty Level</InputLabel>
-                                <Select
-                                    label="Difficulty Level"
-                                    value={formData.level}
-                                    onChange={(e: SelectChangeEvent<DifficultyLevel>) => setFormData({ ...formData, level: e.target.value as DifficultyLevel })}
-                                    sx={{ borderRadius: 3 }}
-                                >
-                                    <MenuItem value={DifficultyLevel.BEGINNER}>Beginner</MenuItem>
-                                    <MenuItem value={DifficultyLevel.INTERMEDIATE}>Intermediate</MenuItem>
-                                    <MenuItem value={DifficultyLevel.ADVANCED}>Advanced</MenuItem>
-                                </Select>
-                            </FormControl>
-                        </Grid>
-                        <Grid size={{ xs: 12, md: 6 }}>
-                            <FormControl fullWidth>
-                                <InputLabel>Status</InputLabel>
-                                <Select
-                                    label="Status"
-                                    value={formData.status}
-                                    onChange={(e: SelectChangeEvent<CourseStatus>) => setFormData({ ...formData, status: e.target.value as CourseStatus })}
-                                    sx={{ borderRadius: 3 }}
-                                >
-                                    <MenuItem value={CourseStatus.DRAFT}>Draft</MenuItem>
-                                    <MenuItem value={CourseStatus.PUBLISHED}>Published</MenuItem>
-                                    <MenuItem value={CourseStatus.ARCHIVED}>Archived</MenuItem>
-                                </Select>
-                            </FormControl>
-                        </Grid>
-                    </Grid>
+                    <CourseForm
+                        formData={formData}
+                        setFormData={setFormData}
+                    />
                 </DialogContent>
                 <DialogActions sx={{ px: 3, pb: 3, pt: 1 }}>
                     <Button

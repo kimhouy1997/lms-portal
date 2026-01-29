@@ -382,7 +382,7 @@ const AdminDashboard = () => {
                                                 <Typography variant="body2" sx={{ fontWeight: 800 }}>{course.students}</Typography>
                                             </TableCell>
                                             <TableCell>
-                                                <Chip label={course.status} size="small" color={course.statusColor} variant="outlined" sx={{ fontWeight: 800, borderRadius: 1.5, bgcolor: alpha(theme.palette[course.statusColor].main, 0.05) }} />
+                                                <Chip label={course.status} size="small" color={course.statusColor as 'success' | 'error' | 'warning' | 'default'} variant="outlined" sx={{ fontWeight: 800, borderRadius: 1.5, bgcolor: alpha((theme.palette as any)[course.statusColor === 'default' ? 'grey' : course.statusColor].main, 0.05) }} />
                                             </TableCell>
                                         </TableRow>
                                     ))}

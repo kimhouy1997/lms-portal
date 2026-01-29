@@ -1,3 +1,3 @@
-const AuthProvider = () => {
-    return <></>
-}
+export const AuthProvider = () => {
+    return <></>;
+};

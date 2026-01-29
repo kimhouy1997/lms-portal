@@ -5,18 +5,13 @@ import {
     Divider,
     Switch,
     FormControlLabel,
-    useTheme,
     RadioGroup,
     Radio,
-    FormControl,
-    FormLabel,
-    alpha,
     MenuItem,
     TextField
 } from '@mui/material';
 import {
     Palette,
-    Translate,
     Dashboard,
     DateRange,
     Accessibility
@@ -25,7 +20,6 @@ import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { setThemeMode } from '@/redux/slices/appSlice';
 
 const PreferencesSection = () => {
-    const theme = useTheme();
     const dispatch = useAppDispatch();
     const themeMode = useAppSelector((state) => state.app.themeMode);
 
