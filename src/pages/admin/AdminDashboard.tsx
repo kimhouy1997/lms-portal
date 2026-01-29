@@ -45,12 +45,16 @@ import {
     Business,
     Dashboard,
     Settings,
-    MoreVert,
     Event
 } from '@mui/icons-material';
 import { motion } from 'framer-motion';
+import EnrollmentTrendChart from '../../components/dashboard/EnrollmentTrendChart';
+import SystemDistributionChart from '../../components/dashboard/SystemDistributionChart';
+import CoursePerformanceChart from '../../components/dashboard/CoursePerformanceChart';
 
 const MotionCard = motion(Card);
+const MotionBox = motion(Box);
+const MotionGrid = motion(Grid);
 
 // Types
 type AlertType = 'error' | 'warning' | 'info';
@@ -96,7 +100,7 @@ const AdminDashboard = () => {
         <Box sx={{ pb: 6, mt: -2 }}>
             {/* 1. Dashboard Header */}
             <Box sx={{ mb: 5, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: 3 }}>
-                <Box>
+                <MotionBox initial={{ opacity: 0, x: -25 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.5 }}>
                     <Typography variant="h3" sx={{ fontWeight: 900, letterSpacing: -1.5, mb: 0.5 }}>
                         School Dashboard
                     </Typography>
@@ -118,113 +122,128 @@ const AdminDashboard = () => {
                                     bgcolor: alpha(theme.palette.secondary.main, 0.05)
                                 }}
                             >
-                                <MenuItem value="2024-2025">Academic Year: 2024–2025</MenuItem>
-                                <MenuItem value="2025-2026">Academic Year: 2025–2026</MenuItem>
+                                <MenuItem value="2024-2025">Year: 2024–2025</MenuItem>
+                                <MenuItem value="2025-2026">Year: 2025–2026</MenuItem>
                             </Select>
                         </FormControl>
                     </Stack>
-                </Box>
-                <Stack direction="row" spacing={1.5} alignItems="center">
-                    <Stack direction="row" spacing={1} sx={{ bgcolor: alpha(theme.palette.divider, 0.05), p: 0.5, borderRadius: 3 }}>
-                        <TextField
-                            type="date"
-                            size="small"
-                            value={dateRange.start}
-                            onChange={(e) => setDateRange({ ...dateRange, start: e.target.value })}
-                            sx={{
-                                '& .MuiOutlinedInput-root': {
-                                    borderRadius: 2.5,
-                                    bgcolor: 'background.paper',
-                                    '& fieldset': { border: 'none' },
-                                    fontWeight: 700,
-                                    fontSize: '0.8rem',
-                                    width: 140
-                                }
-                            }}
-                            InputProps={{
-                                startAdornment: (
-                                    <InputAdornment position="start">
-                                        <Event sx={{ fontSize: 16, color: 'text.secondary' }} />
-                                    </InputAdornment>
-                                ),
-                            }}
-                        />
-                        <Box sx={{ display: 'flex', alignItems: 'center', px: 0.5 }}>
-                            <Typography variant="caption" sx={{ fontWeight: 900, color: 'text.secondary' }}>TO</Typography>
-                        </Box>
-                        <TextField
-                            type="date"
-                            size="small"
-                            value={dateRange.end}
-                            onChange={(e) => setDateRange({ ...dateRange, end: e.target.value })}
-                            sx={{
-                                '& .MuiOutlinedInput-root': {
-                                    borderRadius: 2.5,
-                                    bgcolor: 'background.paper',
-                                    '& fieldset': { border: 'none' },
-                                    fontWeight: 700,
-                                    fontSize: '0.8rem',
-                                    width: 140
-                                }
-                            }}
-                            InputProps={{
-                                startAdornment: (
-                                    <InputAdornment position="start">
-                                        <Event sx={{ fontSize: 16, color: 'text.secondary' }} />
-                                    </InputAdornment>
-                                ),
-                            }}
-                        />
-                    </Stack>
-                    <Divider orientation="vertical" flexItem sx={{ mx: 1, my: 1 }} />
-                    <Button
-                        variant="outlined"
-                        startIcon={<Add />}
-                        sx={{ borderRadius: 3, fontWeight: 800, px: 2, height: 48, borderColor: alpha(theme.palette.divider, 0.2) }}
-                    >
-                        Create Course
-                    </Button>
-                    <Button
-                        variant="outlined"
-                        color="secondary"
-                        startIcon={<Add />}
-                        sx={{ borderRadius: 3, fontWeight: 800, px: 2, height: 48, bgcolor: alpha(theme.palette.secondary.main, 0.05) }}
-                    >
-                        Add Teacher
-                    </Button>
-                    <Button
-                        variant="contained"
-                        startIcon={<Add />}
-                        sx={{
-                            borderRadius: 3,
-                            fontWeight: 800,
-                            px: 3,
-                            height: 48,
-                            boxShadow: `0 8px 20px ${alpha(theme.palette.primary.main, 0.3)}`
-                        }}
-                    >
-                        Add Student
-                    </Button>
+                </MotionBox>
+
+                <Stack direction="row" spacing={3} alignItems="center" component={motion.div} initial={{ opacity: 0, x: 25 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.5, delay: 0.2 }}>
+                    {/* Quick Actions Section */}
+                    <Box>
+                        <Typography variant="caption" sx={{ fontWeight: 800, color: 'text.secondary', display: 'block', mb: 0.5 }}>QUICK ACTIONS</Typography>
+                        <Stack direction="row" spacing={1.5}>
+                            {[
+                                { title: 'New Course', icon: <Add />, color: 'primary', variant: 'outlined' as const },
+                                { title: 'Add Teacher', icon: <People />, color: 'secondary', variant: 'outlined' as const },
+                                { title: 'Add Student', icon: <AssignmentInd />, color: 'primary', variant: 'contained' as const },
+                            ].map((action, i) => (
+                                <Button
+                                    key={i}
+                                    variant={action.variant}
+                                    color={action.color as 'primary' | 'secondary'}
+                                    component={motion.button}
+                                    whileHover={{ y: -5, scale: 1.05 }}
+                                    whileTap={{ scale: 0.95 }}
+                                    sx={{
+                                        borderRadius: 4,
+                                        fontWeight: 800,
+                                        px: 2,
+                                        py: 1,
+                                        minWidth: 100,
+                                        flexDirection: 'column',
+                                        gap: 0.5,
+                                        height: 'auto',
+                                        borderColor: action.variant === 'outlined' ? alpha(theme.palette[action.color as 'primary' | 'secondary'].main, 0.2) : 'transparent',
+                                        bgcolor: action.variant === 'contained' ? undefined : alpha(theme.palette[action.color as 'primary' | 'secondary'].main, 0.02),
+                                        boxShadow: action.variant === 'contained' ? `0 8px 16px ${alpha(theme.palette.primary.main, 0.25)}` : 'none',
+                                    }}
+                                >
+                                    {action.icon}
+                                    <Typography variant="caption" sx={{ fontWeight: 800 }}>{action.title}</Typography>
+                                </Button>
+                            ))}
+                        </Stack>
+                    </Box>
+
+                    <Divider orientation="vertical" flexItem sx={{ mx: 0.5, opacity: 0.6 }} />
+
+                    {/* Filters Section */}
+                    <Box>
+                        <Typography variant="caption" sx={{ fontWeight: 800, color: 'text.secondary', display: 'block', mb: 0.5 }}>DATE RANGE</Typography>
+                        <Stack direction="row" spacing={1} sx={{ bgcolor: alpha(theme.palette.divider, 0.05), p: 0.5, borderRadius: 3 }}>
+                            <TextField
+                                type="date"
+                                size="small"
+                                value={dateRange.start}
+                                onChange={(e) => setDateRange({ ...dateRange, start: e.target.value })}
+                                sx={{
+                                    '& .MuiOutlinedInput-root': {
+                                        borderRadius: 2.5,
+                                        bgcolor: 'background.paper',
+                                        '& fieldset': { border: 'none' },
+                                        fontWeight: 700,
+                                        fontSize: '0.8rem',
+                                        width: 140
+                                    }
+                                }}
+                                InputProps={{
+                                    startAdornment: (
+                                        <InputAdornment position="start">
+                                            <Event sx={{ fontSize: 16, color: 'text.secondary' }} />
+                                        </InputAdornment>
+                                    ),
+                                }}
+                            />
+                            <Box sx={{ display: 'flex', alignItems: 'center', px: 0.5 }}>
+                                <Typography variant="caption" sx={{ fontWeight: 900, color: 'text.secondary' }}>TO</Typography>
+                            </Box>
+                            <TextField
+                                type="date"
+                                size="small"
+                                value={dateRange.end}
+                                onChange={(e) => setDateRange({ ...dateRange, end: e.target.value })}
+                                sx={{
+                                    '& .MuiOutlinedInput-root': {
+                                        borderRadius: 2.5,
+                                        bgcolor: 'background.paper',
+                                        '& fieldset': { border: 'none' },
+                                        fontWeight: 700,
+                                        fontSize: '0.8rem',
+                                        width: 140
+                                    }
+                                }}
+                                InputProps={{
+                                    startAdornment: (
+                                        <InputAdornment position="start">
+                                            <Event sx={{ fontSize: 16, color: 'text.secondary' }} />
+                                        </InputAdornment>
+                                    ),
+                                }}
+                            />
+                        </Stack>
+                    </Box>
                 </Stack>
             </Box>
 
             {/* 2. Key Metrics (KPI Cards) */}
-            <Grid container spacing={3} sx={{ mb: 6 }}>
+            <MotionGrid container spacing={3} sx={{ mb: 6 }} initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.4 }}>
                 {KPI_DATA.map((kpi, index) => (
                     <Grid size={{ xs: 12, sm: 6, md: 4, lg: 2 }} key={index}>
                         <MotionCard
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: index * 0.05 }}
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ delay: 0.5 + (index * 0.1) }}
                             sx={{
                                 p: 2.5,
                                 borderRadius: 5,
                                 border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
                                 transition: '0.3s',
                                 '&:hover': {
-                                    transform: 'translateY(-5px)',
-                                    boxShadow: `0 12px 24px ${alpha(kpi.color, 0.15)}`,
-                                    borderColor: alpha(kpi.color, 0.3)
+                                    transform: 'translateY(-8px)',
+                                    boxShadow: `0 16px 32px ${alpha(kpi.color, 0.15)}`,
+                                    borderColor: alpha(kpi.color, 0.4)
                                 }
                             }}
                         >
@@ -263,75 +282,72 @@ const AdminDashboard = () => {
                         </MotionCard>
                     </Grid>
                 ))}
-            </Grid>
+            </MotionGrid>
 
-            <Grid container spacing={4}>
+            {/* 3. Main Content Grid */}
+            <Grid container spacing={4} component={motion.div} initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.8 }}>
                 {/* Left Side: Activity and Status */}
                 <Grid size={{ xs: 12, lg: 8 }}>
-                    {/* 3. Enrollment & Learning Activity */}
                     <Typography variant="h5" sx={{ fontWeight: 800, mb: 3, display: 'flex', alignItems: 'center', gap: 1 }}>
                         <TrendingUp color="primary" /> System Oversight
                     </Typography>
                     <Grid container spacing={3} sx={{ mb: 6 }}>
-                        <Grid size={{ xs: 12, md: 6 }}>
-                            <Paper sx={{ p: 3, borderRadius: 5, bgcolor: alpha(theme.palette.primary.main, 0.02), border: `1px solid ${alpha(theme.palette.divider, 0.1)}` }}>
-                                <Typography variant="subtitle1" sx={{ fontWeight: 800, mb: 2.5 }}>Enrollment Summary</Typography>
-                                <Stack spacing={3}>
-                                    <Stack direction="row" justifyContent="space-between" alignItems="center">
-                                        <Stack direction="row" spacing={2} alignItems="center">
-                                            <Avatar sx={{ bgcolor: alpha(theme.palette.success.main, 0.1), color: 'success.main' }}><Add /></Avatar>
-                                            <Box>
-                                                <Typography variant="body2" sx={{ fontWeight: 700 }}>New Students</Typography>
-                                                <Typography variant="caption" color="text.secondary">This session (monthly)</Typography>
-                                            </Box>
-                                        </Stack>
-                                        <Typography variant="h5" sx={{ fontWeight: 900, color: 'success.main' }}>+128</Typography>
-                                    </Stack>
-                                    <Divider />
-                                    <Stack direction="row" justifyContent="space-between" alignItems="center">
-                                        <Stack direction="row" spacing={2} alignItems="center">
-                                            <Avatar sx={{ bgcolor: alpha(theme.palette.error.main, 0.1), color: 'error.main' }}><MoreVert sx={{ transform: 'rotate(90deg)' }} /></Avatar>
-                                            <Box>
-                                                <Typography variant="body2" sx={{ fontWeight: 700 }}>Inactive Students</Typography>
-                                                <Typography variant="caption" color="text.secondary">Dropped out / Withdrawn</Typography>
-                                            </Box>
-                                        </Stack>
-                                        <Typography variant="h5" sx={{ fontWeight: 900 }}>42</Typography>
-                                    </Stack>
+                        <Grid size={{ xs: 12, md: 7 }}>
+                            <Paper sx={{ p: 3, borderRadius: 5, bgcolor: 'background.paper', border: `1px solid ${alpha(theme.palette.divider, 0.1)}`, boxShadow: `0 4px 20px ${alpha(theme.palette.common.black, 0.05)}` }}>
+                                <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 2 }}>
+                                    <Box>
+                                        <Typography variant="subtitle1" sx={{ fontWeight: 800 }}>Enrollment Growth</Typography>
+                                        <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600 }}>Monthly enrollment trend for the current year</Typography>
+                                    </Box>
+                                    <Chip label="+24% YoY" size="small" color="success" sx={{ fontWeight: 800, borderRadius: 1.5 }} />
                                 </Stack>
+                                <EnrollmentTrendChart />
+                                <Box sx={{ mt: 2, p: 2, bgcolor: alpha(theme.palette.primary.main, 0.03), borderRadius: 3, border: `1px dashed ${alpha(theme.palette.primary.main, 0.2)}` }}>
+                                    <Typography variant="caption" sx={{ fontWeight: 700, color: 'primary.main', display: 'flex', alignItems: 'center', gap: 1 }}>
+                                        <TrendingUp sx={{ fontSize: 16 }} /> Insight: Enrollments spiked by 32% in Q3 due to the new "Digital Marketing" certification launch.
+                                    </Typography>
+                                </Box>
                             </Paper>
                         </Grid>
-                        <Grid size={{ xs: 12, md: 6 }}>
-                            <Paper sx={{ p: 3, borderRadius: 5, bgcolor: alpha(theme.palette.secondary.main, 0.02), border: `1px solid ${alpha(theme.palette.divider, 0.1)}` }}>
-                                <Typography variant="subtitle1" sx={{ fontWeight: 800, mb: 2.5 }}>Learning Activity</Typography>
-                                <Stack spacing={3}>
-                                    <Stack direction="row" justifyContent="space-between" alignItems="center">
-                                        <Stack direction="row" spacing={2} alignItems="center">
-                                            <Avatar sx={{ bgcolor: alpha(theme.palette.info.main, 0.1), color: 'info.main' }}><CheckCircle /></Avatar>
-                                            <Box>
-                                                <Typography variant="body2" sx={{ fontWeight: 700 }}>Lessons Completed</Typography>
-                                                <Typography variant="caption" color="text.secondary">Tracked today</Typography>
-                                            </Box>
+                        <Grid size={{ xs: 12, md: 5 }}>
+                            <Paper sx={{ p: 3, borderRadius: 5, bgcolor: 'background.paper', border: `1px solid ${alpha(theme.palette.divider, 0.1)}`, height: '100%' }}>
+                                <Typography variant="subtitle1" sx={{ fontWeight: 800, mb: 0.5 }}>Student Status Diversity</Typography>
+                                <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600, display: 'block', mb: 3 }}>Real-time student health distribution</Typography>
+                                <SystemDistributionChart />
+                                <Stack spacing={1} sx={{ mt: 3 }}>
+                                    {[
+                                        { label: 'Active', value: 75, color: theme.palette.primary.main },
+                                        { label: 'Inactive', value: 18, color: theme.palette.warning.main },
+                                        { label: 'At Risk', value: 7, color: theme.palette.error.main },
+                                    ].map((item, i) => (
+                                        <Stack key={i} direction="row" justifyContent="space-between" alignItems="center">
+                                            <Stack direction="row" spacing={1} alignItems="center">
+                                                <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: item.color }} />
+                                                <Typography variant="caption" sx={{ fontWeight: 700 }}>{item.label}</Typography>
+                                            </Stack>
+                                            <Typography variant="caption" sx={{ fontWeight: 800 }}>{item.value}%</Typography>
                                         </Stack>
-                                        <Typography variant="h5" sx={{ fontWeight: 900 }}>1,042</Typography>
-                                    </Stack>
-                                    <Divider />
-                                    <Stack direction="row" justifyContent="space-between" alignItems="center">
-                                        <Stack direction="row" spacing={2} alignItems="center">
-                                            <Avatar sx={{ bgcolor: alpha(theme.palette.warning.main, 0.1), color: 'warning.main' }}><Assignment /></Avatar>
-                                            <Box>
-                                                <Typography variant="body2" sx={{ fontWeight: 700 }}>Submissions</Typography>
-                                                <Typography variant="caption" color="text.secondary">Pending Review (Weekly)</Typography>
-                                            </Box>
-                                        </Stack>
-                                        <Typography variant="h5" sx={{ fontWeight: 900 }}>384</Typography>
-                                    </Stack>
+                                    ))}
                                 </Stack>
                             </Paper>
                         </Grid>
                     </Grid>
 
-                    {/* 4. Courses & Classes Status */}
+                    <Grid container spacing={3} sx={{ mb: 6 }}>
+                        <Grid size={{ xs: 12 }}>
+                            <Paper sx={{ p: 3, borderRadius: 5, bgcolor: 'background.paper', border: `1px solid ${alpha(theme.palette.divider, 0.1)}` }}>
+                                <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 3 }}>
+                                    <Box>
+                                        <Typography variant="subtitle1" sx={{ fontWeight: 800 }}>Course Completion Analytics</Typography>
+                                        <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600 }}>Average progress across departmental categories</Typography>
+                                    </Box>
+                                    <Button variant="outlined" size="small" sx={{ borderRadius: 2, fontWeight: 800 }}>Full Report</Button>
+                                </Stack>
+                                <CoursePerformanceChart />
+                            </Paper>
+                        </Grid>
+                    </Grid>
+
                     <Box sx={{ mb: 6 }}>
                         <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 3 }}>
                             <Typography variant="h5" sx={{ fontWeight: 800 }}>Courses & Classes Status</Typography>
@@ -353,11 +369,7 @@ const AdminDashboard = () => {
                                             <TableCell>
                                                 <Typography variant="body2" sx={{ fontWeight: 800 }}>{course.name}</Typography>
                                                 <Box sx={{ width: '100%', mt: 0.5 }}>
-                                                    <LinearProgress
-                                                        variant="determinate"
-                                                        value={course.progress}
-                                                        sx={{ height: 4, borderRadius: 2, bgcolor: alpha(theme.palette.primary.main, 0.05) }}
-                                                    />
+                                                    <LinearProgress variant="determinate" value={course.progress} sx={{ height: 4, borderRadius: 2, bgcolor: alpha(theme.palette.primary.main, 0.05) }} />
                                                 </Box>
                                             </TableCell>
                                             <TableCell>
@@ -370,17 +382,7 @@ const AdminDashboard = () => {
                                                 <Typography variant="body2" sx={{ fontWeight: 800 }}>{course.students}</Typography>
                                             </TableCell>
                                             <TableCell>
-                                                <Chip
-                                                    label={course.status}
-                                                    size="small"
-                                                    color={course.statusColor}
-                                                    variant="outlined"
-                                                    sx={{
-                                                        fontWeight: 800,
-                                                        borderRadius: 1.5,
-                                                        bgcolor: alpha(theme.palette[course.statusColor].main, 0.05)
-                                                    }}
-                                                />
+                                                <Chip label={course.status} size="small" color={course.statusColor} variant="outlined" sx={{ fontWeight: 800, borderRadius: 1.5, bgcolor: alpha(theme.palette[course.statusColor].main, 0.05) }} />
                                             </TableCell>
                                         </TableRow>
                                     ))}
@@ -392,71 +394,40 @@ const AdminDashboard = () => {
 
                 {/* Right Side: Alerts, Activity, Shortcuts */}
                 <Grid size={{ xs: 12, lg: 4 }}>
-                    {/* 5. Alerts & Action Required */}
                     <Box sx={{ mb: 6 }}>
                         <Typography variant="h5" sx={{ fontWeight: 800, mb: 3, color: 'error.main', display: 'flex', alignItems: 'center', gap: 1 }}>
                             <Warning /> Action Required
                         </Typography>
                         <Stack spacing={2}>
                             {ALERTS.map((alert, idx) => (
-                                <Paper
-                                    key={idx}
-                                    sx={{
-                                        p: 2,
-                                        borderRadius: 4,
-                                        borderLeft: `6px solid ${theme.palette[alert.type].main}`,
-                                        bgcolor: alpha(theme.palette[alert.type].main, 0.03)
-                                    }}
-                                >
+                                <Paper key={idx} sx={{ p: 2, borderRadius: 4, borderLeft: `6px solid ${theme.palette[alert.type].main}`, bgcolor: alpha(theme.palette[alert.type].main, 0.03) }}>
                                     <Stack direction="row" justifyContent="space-between" alignItems="center">
                                         <Box sx={{ pr: 2 }}>
                                             <Typography variant="body2" sx={{ fontWeight: 700, mb: 0.5 }}>{alert.message}</Typography>
                                             <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600 }}>System identified priority issue</Typography>
                                         </Box>
-                                        <Button
-                                            size="small"
-                                            variant="outlined"
-                                            color={alert.type}
-                                            sx={{ borderRadius: 2, fontWeight: 900, minWidth: 100 }}
-                                        >
-                                            {alert.action}
-                                        </Button>
+                                        <Button size="small" variant="outlined" color={alert.type} sx={{ borderRadius: 2, fontWeight: 900, minWidth: 100 }}>{alert.action}</Button>
                                     </Stack>
                                 </Paper>
                             ))}
                         </Stack>
                     </Box>
 
-                    {/* 6. Recent Activity */}
                     <Box sx={{ mb: 6 }}>
                         <Typography variant="h5" sx={{ fontWeight: 800, mb: 3 }}>Recent Activity</Typography>
                         <Paper sx={{ borderRadius: 5, border: `1px solid ${alpha(theme.palette.divider, 0.1)}`, p: 2 }}>
                             <List disablePadding>
                                 {RECENT_ACTIVITY.map((activity, idx) => (
-                                    <ListItem
-                                        key={idx}
-                                        disablePadding
-                                        sx={{
-                                            mb: idx !== RECENT_ACTIVITY.length - 1 ? 2 : 0,
-                                            pb: idx !== RECENT_ACTIVITY.length - 1 ? 2 : 0,
-                                            borderBottom: idx !== RECENT_ACTIVITY.length - 1 ? `1px solid ${alpha(theme.palette.divider, 0.1)}` : 'none'
-                                        }}
-                                    >
+                                    <ListItem key={idx} disablePadding sx={{ mb: idx !== RECENT_ACTIVITY.length - 1 ? 2 : 0, pb: idx !== RECENT_ACTIVITY.length - 1 ? 2 : 0, borderBottom: idx !== RECENT_ACTIVITY.length - 1 ? `1px solid ${alpha(theme.palette.divider, 0.1)}` : 'none' }}>
                                         <ListItemAvatar>
-                                            <Avatar sx={{ bgcolor: alpha(theme.palette.primary.main, 0.1), color: 'primary.main' }}>
-                                                {activity.icon}
-                                            </Avatar>
+                                            <Avatar sx={{ bgcolor: alpha(theme.palette.primary.main, 0.1), color: 'primary.main' }}>{activity.icon}</Avatar>
                                         </ListItemAvatar>
                                         <ListItemText
                                             primary={<Typography variant="body2" sx={{ fontWeight: 800 }}>{activity.action}</Typography>}
                                             secondary={
                                                 <Box>
-                                                    <Typography component="span" variant="caption" color="text.secondary" sx={{ fontWeight: 600 }}>
-                                                        {activity.user} • {activity.target}
-                                                    </Typography>
-                                                    <Typography display="block" variant="caption" sx={{ fontWeight: 700, color: 'primary.main', mt: 0.2 }}>
-                                                        {activity.time}
-                                                    </Typography>
+                                                    <Typography component="span" variant="caption" color="text.secondary" sx={{ fontWeight: 600 }}>{activity.user} • {activity.target}</Typography>
+                                                    <Typography display="block" variant="caption" sx={{ fontWeight: 700, color: 'primary.main', mt: 0.2 }}>{activity.time}</Typography>
                                                 </Box>
                                             }
                                         />
@@ -466,7 +437,6 @@ const AdminDashboard = () => {
                         </Paper>
                     </Box>
 
-                    {/* 7. System Shortcuts */}
                     <Box>
                         <Typography variant="h5" sx={{ fontWeight: 800, mb: 3 }}>Quick Management</Typography>
                         <Grid container spacing={2}>
@@ -477,24 +447,7 @@ const AdminDashboard = () => {
                                 { title: 'Settings', icon: <Settings />, color: '#607d8b' },
                             ].map((link, idx) => (
                                 <Grid size={{ xs: 6 }} key={idx}>
-                                    <Button
-                                        fullWidth
-                                        variant="outlined"
-                                        startIcon={link.icon}
-                                        sx={{
-                                            height: 60,
-                                            borderRadius: 3,
-                                            fontWeight: 800,
-                                            borderColor: alpha(link.color, 0.2),
-                                            color: 'text.primary',
-                                            '&:hover': {
-                                                bgcolor: alpha(link.color, 0.05),
-                                                borderColor: link.color
-                                            }
-                                        }}
-                                    >
-                                        {link.title}
-                                    </Button>
+                                    <Button fullWidth variant="outlined" startIcon={link.icon} sx={{ height: 60, borderRadius: 3, fontWeight: 800, borderColor: alpha(link.color, 0.2), color: 'text.primary', '&:hover': { bgcolor: alpha(link.color, 0.05), borderColor: link.color } }}>{link.title}</Button>
                                 </Grid>
                             ))}
                         </Grid>
