@@ -42,6 +42,7 @@ import { logout as logoutAction } from '@/redux/slices/authSlice';
 import { setThemeMode } from '@/redux/slices/appSlice';
 import { useTranslation } from 'react-i18next';
 import { ROUTES } from '@root/src/constant/routers';
+import { motion } from 'framer-motion';
 
 const drawerWidth = 280;
 
@@ -72,20 +73,27 @@ const AdminLayout = () => {
         {
             subheader: 'SYSTEM',
             items: [
-                { title: 'Dashboard', path: `${ROUTES.admin.dashboard}`, icon: <Dashboard /> },
-                { title: 'Institutes', path: `${ROUTES.admin.institutes}`, icon: <Business /> },
-                { title: 'Courses', path: `${ROUTES.admin.courseManagement}`, icon: <School /> },
+                { title: 'Dashboard', path: ROUTES.admin.index, icon: <Dashboard /> },
+                { title: 'Institutes', path: `${ROUTES.admin.index}/${ROUTES.admin.institutes}`, icon: <Business /> },
+                { title: 'Courses', path: `${ROUTES.admin.index}/${ROUTES.admin.courseManagement}`, icon: <School /> },
             ]
         },
         {
             subheader: 'MANAGEMENT',
             items: [
-                { title: 'Users', path: `${ROUTES.admin.userManagement}`, icon: <People /> },
-                { title: 'Roles & Permissions', path: '/admin/permissions', icon: <Security /> },
-                { title: 'System Logs', path: '/admin/logs', icon: <History /> },
+                { title: 'Users', path: `${ROUTES.admin.index}/${ROUTES.admin.userManagement}`, icon: <People /> },
+                { title: 'Roles & Permissions', path: `${ROUTES.admin.index}/permissions`, icon: <Security /> },
+                { title: 'System Logs', path: `${ROUTES.admin.index}/logs`, icon: <History /> },
             ]
         }
     ];
+
+    const isPathActive = (itemPath: string) => {
+        if (itemPath === ROUTES.admin.index) {
+            return location.pathname === ROUTES.admin.index || location.pathname === `${ROUTES.admin.index}/`;
+        }
+        return location.pathname.startsWith(itemPath);
+    };
 
     const drawer = (
         <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column', bgcolor: 'grey.900', color: 'common.white' }}>
@@ -113,27 +121,56 @@ const AdminLayout = () => {
                             {section.subheader}
                         </ListSubheader>
                         {section.items.map((item) => {
-                            const isActive = location.pathname === item.path;
+                            const isActive = isPathActive(item.path);
                             return (
-                                <ListItem key={item.title} disablePadding sx={{ mb: 0.5 }}>
+                                <ListItem key={item.title} disablePadding sx={{ mb: 0.5, position: 'relative' }}>
+                                    {isActive && (
+                                        <Box
+                                            component={motion.div}
+                                            layoutId="active-indicator"
+                                            sx={{
+                                                position: 'absolute',
+                                                left: -16,
+                                                width: 4,
+                                                height: 40,
+                                                bgcolor: 'primary.main',
+                                                borderRadius: '0 4px 4px 0',
+                                                boxShadow: `4px 0 10px ${alpha(theme.palette.primary.main, 0.4)}`
+                                            }}
+                                        />
+                                    )}
                                     <ListItemButton
                                         component={NavLink}
                                         to={item.path}
                                         sx={{
-                                            borderRadius: 2,
-                                            py: 1.2,
-                                            color: isActive ? 'primary.main' : 'grey.400',
+                                            borderRadius: 3,
+                                            py: 1.5,
+                                            px: 2,
+                                            color: isActive ? 'common.white' : 'grey.500',
                                             bgcolor: isActive ? alpha(theme.palette.primary.main, 0.15) : 'transparent',
+                                            transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
                                             '&:hover': {
-                                                bgcolor: alpha(theme.palette.primary.main, 0.1),
-                                                color: 'primary.main'
-                                            }
+                                                bgcolor: isActive ? alpha(theme.palette.primary.main, 0.2) : alpha(theme.palette.common.white, 0.05),
+                                                color: 'common.white',
+                                                '& .MuiListItemIcon-root': { color: 'primary.main', transform: 'translateX(4px)' }
+                                            },
                                         }}
                                     >
-                                        <ListItemIcon sx={{ color: 'inherit', minWidth: 40 }}>
+                                        <ListItemIcon sx={{
+                                            color: isActive ? 'primary.main' : 'inherit',
+                                            minWidth: 40,
+                                            transition: 'all 0.2s ease'
+                                        }}>
                                             {item.icon}
                                         </ListItemIcon>
-                                        <ListItemText primary={item.title} primaryTypographyProps={{ fontWeight: isActive ? 700 : 500, fontSize: '0.875rem' }} />
+                                        <ListItemText
+                                            primary={item.title}
+                                            primaryTypographyProps={{
+                                                fontWeight: isActive ? 800 : 500,
+                                                fontSize: '0.875rem',
+                                                letterSpacing: isActive ? 0.2 : 0
+                                            }}
+                                        />
                                     </ListItemButton>
                                 </ListItem>
                             );

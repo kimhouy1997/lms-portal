@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import {
     Box,
     Typography,
-    Grid2 as Grid,
+    Grid,
     Card,
     Button,
     Stack,
@@ -17,6 +17,7 @@ import {
     Tabs,
     Tab,
     Menu,
+    MenuItem,
     ListItemIcon,
     ListItemText,
     Divider

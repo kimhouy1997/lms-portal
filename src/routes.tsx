@@ -30,6 +30,7 @@ import TeacherClassDetail from "./pages/teacher/TeacherClassDetail";
 import TeacherStudent from "./pages/teacher/TeacherStudent";
 import CourseManagement from "./pages/admin/CourseManagement";
 import UserManagement from "./pages/admin/UserMagement";
+import AdminDashboard from "./pages/admin/AdminDashboard";
 
 const routes: RouteObject[] = [
 
@@ -121,8 +122,7 @@ const routes: RouteObject[] = [
           {
             element: <AdminLayout />,
             children: [
-              { index: true, element: <Home /> },
-              { path: ROUTES.admin.dashboard, element: <Courses /> },
+              { index: true, element: <AdminDashboard /> },
               { path: ROUTES.admin.courseManagement, element: <CourseManagement /> },
               { path: `${ROUTES.admin.courseManagement}/:id`, element: <CourseDetail /> },
               { path: ROUTES.admin.institutes, element: <Institute /> },
