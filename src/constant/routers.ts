@@ -41,13 +41,14 @@
     admin:{
         index: '/admin',
         dashboard: 'dashboard',
-        courses: 'courses',
+        courseManagement: 'course-management',
         courseDetail: 'courses/:id',
         institutes: 'institutes',
         instituteCreate: 'institutes/create',
         instituteEdit: 'institutes/edit/:id',
         profile: 'profile',
         settings: 'settings',
+        userManagement: 'user-management',
     }
 }
 

@@ -28,6 +28,8 @@ import TeacherCourseDetail from "./pages/teacher/TeacherCourseDetail";
 import TeacherClass from "./pages/teacher/TeacherClass";
 import TeacherClassDetail from "./pages/teacher/TeacherClassDetail";
 import TeacherStudent from "./pages/teacher/TeacherStudent";
+import CourseManagement from "./pages/admin/CourseManagement";
+import UserManagement from "./pages/admin/UserMagement";
 
 const routes: RouteObject[] = [
 
@@ -121,11 +123,12 @@ const routes: RouteObject[] = [
             children: [
               { index: true, element: <Home /> },
               { path: ROUTES.admin.dashboard, element: <Courses /> },
-              { path: ROUTES.admin.courses, element: <Courses /> },
-              { path: `${ROUTES.admin.courses}/:id`, element: <CourseDetail /> },
+              { path: ROUTES.admin.courseManagement, element: <CourseManagement /> },
+              { path: `${ROUTES.admin.courseManagement}/:id`, element: <CourseDetail /> },
               { path: ROUTES.admin.institutes, element: <Institute /> },
               { path: ROUTES.admin.profile, element: <AdminSetting /> },
               { path: ROUTES.admin.settings, element: <AdminSetting /> },
+              { path: ROUTES.admin.userManagement, element: <UserManagement /> },
             ],
           },
         ],

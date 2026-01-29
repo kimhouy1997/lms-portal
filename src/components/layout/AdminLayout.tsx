@@ -41,6 +41,7 @@ import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { logout as logoutAction } from '@/redux/slices/authSlice';
 import { setThemeMode } from '@/redux/slices/appSlice';
 import { useTranslation } from 'react-i18next';
+import { ROUTES } from '@root/src/constant/routers';
 
 const drawerWidth = 280;
 
@@ -71,15 +72,15 @@ const AdminLayout = () => {
         {
             subheader: 'SYSTEM',
             items: [
-                { title: 'Dashboard', path: '/admin/dashboard', icon: <Dashboard /> },
-                { title: 'Institutes', path: '/admin/institutes', icon: <Business /> },
-                { title: 'Courses', path: '/admin/courses', icon: <School /> },
+                { title: 'Dashboard', path: `${ROUTES.admin.dashboard}`, icon: <Dashboard /> },
+                { title: 'Institutes', path: `${ROUTES.admin.institutes}`, icon: <Business /> },
+                { title: 'Courses', path: `${ROUTES.admin.courseManagement}`, icon: <School /> },
             ]
         },
         {
             subheader: 'MANAGEMENT',
             items: [
-                { title: 'Users', path: '/admin/users', icon: <People /> },
+                { title: 'Users', path: `${ROUTES.admin.userManagement}`, icon: <People /> },
                 { title: 'Roles & Permissions', path: '/admin/permissions', icon: <Security /> },
                 { title: 'System Logs', path: '/admin/logs', icon: <History /> },
             ]
