@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
     Box,
     Typography,
@@ -6,13 +7,21 @@ import {
     Chip,
     IconButton,
     alpha,
-    useTheme
+    useTheme,
+    Menu,
+    MenuItem,
+    ListItemIcon,
+    ListItemText,
+    Divider
 } from '@mui/material';
 import {
     School,
     AttachMoney,
     SignalCellularAlt,
-    MoreVert
+    MoreVert,
+    Visibility,
+    Edit,
+    Delete
 } from '@mui/icons-material';
 import { DataTable, type Column } from '@/components/common/DataTable';
 import type { Course } from '@/types/adminCourse';
@@ -24,9 +33,10 @@ interface CourseTableProps {
     rowsPerPage: number;
     onPageChange: (page: number) => void;
     onRowsPerPageChange: (rowsPerPage: number) => void;
-    onMenuOpen: (event: React.MouseEvent<HTMLElement>, course: Course) => void;
-    anchorEl: HTMLElement | null;
-    selectedCourse: Course | null;
+    onEdit: (course: Course) => void;
+    onDelete: (id: number) => void;
+    onView: (course: Course) => void;
+    isLoading?: boolean;
 }
 
 const CourseTable = ({
@@ -35,11 +45,24 @@ const CourseTable = ({
     rowsPerPage,
     onPageChange,
     onRowsPerPageChange,
-    onMenuOpen,
-    anchorEl,
-    selectedCourse
+    onEdit,
+    onDelete,
+    onView,
+    isLoading
 }: CourseTableProps) => {
     const theme = useTheme();
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
+
+    const handleMenuOpen = (event: React.MouseEvent<HTMLElement>, course: Course) => {
+        setAnchorEl(event.currentTarget);
+        setSelectedCourse(course);
+    };
+
+    const handleMenuClose = () => {
+        setAnchorEl(null);
+        setSelectedCourse(null);
+    };
 
     const columns: Column<Course>[] = [
         {
@@ -50,6 +73,7 @@ const CourseTable = ({
                 <Stack direction="row" spacing={2} alignItems="center">
                     <Avatar
                         variant="rounded"
+                        src={row.thumbnail}
                         sx={{
                             width: 48,
                             height: 48,
@@ -58,10 +82,10 @@ const CourseTable = ({
                             borderRadius: 2
                         }}
                     >
-                        <School />
+                        {!row.thumbnail && <School />}
                     </Avatar>
                     <Box sx={{ maxWidth: 250 }}>
-                        <Typography variant="body2" sx={{ fontWeight: 800 }} noWrap>
+                        <Typography variant="body2" sx={{ fontWeight: 800 }} noWrap title={row.title}>
                             {row.title}
                         </Typography>
                         <Typography variant="caption" color="text.secondary" noWrap display="block">
@@ -140,35 +164,88 @@ const CourseTable = ({
             id: 'actions',
             label: 'Management',
             align: 'right',
-            minWidth: 150,
+            minWidth: 100,
             format: (_, row) => (
-                <Stack direction="row" spacing={1} justifyContent="flex-end">
-                    <IconButton
-                        size="small"
-                        onClick={(e) => onMenuOpen(e, row)}
-                        sx={{
-                            bgcolor: anchorEl && selectedCourse?.id === row.id ? alpha(theme.palette.primary.main, 0.1) : 'transparent',
-                            color: anchorEl && selectedCourse?.id === row.id ? 'primary.main' : 'text.secondary',
-                            '&:hover': { bgcolor: alpha(theme.palette.primary.main, 0.05) }
-                        }}
-                    >
-                        <MoreVert fontSize="small" />
-                    </IconButton>
-                </Stack>
+                <IconButton
+                    size="small"
+                    onClick={(e) => handleMenuOpen(e, row)}
+                    sx={{
+                        bgcolor: anchorEl && selectedCourse?.id === row.id ? alpha(theme.palette.primary.main, 0.1) : 'transparent',
+                        color: anchorEl && selectedCourse?.id === row.id ? 'primary.main' : 'text.secondary',
+                        '&:hover': { bgcolor: alpha(theme.palette.primary.main, 0.05) }
+                    }}
+                >
+                    <MoreVert fontSize="small" />
+                </IconButton>
             )
         }
     ];
 
     return (
-        <DataTable
-            columns={columns}
-            data={courses}
-            totalCount={courses.length}
-            page={page}
-            rowsPerPage={rowsPerPage}
-            onPageChange={onPageChange}
-            onRowsPerPageChange={onRowsPerPageChange}
-        />
+        <>
+            <DataTable
+                columns={columns}
+                data={courses}
+                totalCount={courses.length}
+                page={page}
+                rowsPerPage={rowsPerPage}
+                onPageChange={onPageChange}
+                onRowsPerPageChange={onRowsPerPageChange}
+                isLoading={isLoading}
+            />
+
+            <Menu
+                anchorEl={anchorEl}
+                open={Boolean(anchorEl)}
+                onClose={handleMenuClose}
+                transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+                anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+                PaperProps={{
+                    sx: {
+                        borderRadius: 3,
+                        mt: 1,
+                        minWidth: 180,
+                        boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
+                        border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+                        '& .MuiMenuItem-root': {
+                            px: 2,
+                            py: 1.2,
+                            borderRadius: 1.5,
+                            mx: 0.5,
+                            my: 0.2,
+                            '&:hover': {
+                                bgcolor: alpha(theme.palette.primary.main, 0.05),
+                                color: theme.palette.primary.main,
+                                '& .MuiListItemIcon-root': { color: theme.palette.primary.main }
+                            }
+                        }
+                    }
+                }}
+            >
+                <MenuItem onClick={() => { handleMenuClose(); if (selectedCourse) onView(selectedCourse); }}>
+                    <ListItemIcon><Visibility fontSize="small" /></ListItemIcon>
+                    <ListItemText primary="View Details" primaryTypographyProps={{ variant: 'body2', fontWeight: 600 }} />
+                </MenuItem>
+                <MenuItem onClick={() => {
+                    if (selectedCourse) onEdit(selectedCourse);
+                    handleMenuClose();
+                }}>
+                    <ListItemIcon><Edit fontSize="small" /></ListItemIcon>
+                    <ListItemText primary="Edit Course" primaryTypographyProps={{ variant: 'body2', fontWeight: 600 }} />
+                </MenuItem>
+                <Divider sx={{ my: 1, opacity: 0.5 }} />
+                <MenuItem
+                    onClick={() => {
+                        if (selectedCourse) onDelete(selectedCourse.id);
+                        handleMenuClose();
+                    }}
+                    sx={{ color: 'error.main', '&:hover': { bgcolor: alpha(theme.palette.error.main, 0.05) + ' !important' } }}
+                >
+                    <ListItemIcon><Delete fontSize="small" sx={{ color: 'error.main' }} /></ListItemIcon>
+                    <ListItemText primary="Delete Course" primaryTypographyProps={{ variant: 'body2', fontWeight: 600 }} />
+                </MenuItem>
+            </Menu>
+        </>
     );
 };
 

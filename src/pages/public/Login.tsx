@@ -76,7 +76,7 @@ const Login = () => {
       dispatch(setCredentials(response));
       showToast.success('Login successful! Welcome back.');
       const role = response.groups?.toLowerCase() || 'student';
-      navigate(`/${role}/dashboard`);
+      navigate(`/${role}`);
     } catch (error: any) {
       const errorMessage = error?.data?.detail || error?.data?.message || 'Login failed. Please check your credentials.';
       showToast.error(errorMessage);

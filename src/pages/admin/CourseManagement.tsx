@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import {
     Box,
     Typography,
@@ -11,18 +11,10 @@ import {
     useTheme,
     alpha,
     InputAdornment,
-    Menu,
-    MenuItem,
-    ListItemIcon,
-    ListItemText,
-    Divider,
 } from '@mui/material';
 import {
     Add,
     Search,
-    Edit,
-    Delete,
-    Visibility,
 } from '@mui/icons-material';
 import type {
     Course,
@@ -34,6 +26,7 @@ import {
 } from '@/types/adminCourse';
 import CourseTable from '@/components/admin/CourseTable';
 import CourseForm from '@/components/admin/CourseForm';
+import { toast } from 'react-hot-toast';
 
 // Mock Data
 const initialTechnologies: Technology[] = [
@@ -96,46 +89,9 @@ const CourseManagement = () => {
     const [editingCourse, setEditingCourse] = useState<Course | null>(null);
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
-    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-    const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
-
-    const handleMenuOpen = (event: React.MouseEvent<HTMLElement>, course: Course) => {
-        setAnchorEl(event.currentTarget);
-        setSelectedCourse(course);
-    };
-
-    const handleMenuClose = () => {
-        setAnchorEl(null);
-        setSelectedCourse(null);
-    };
-
-    // Form state
-    const [formData, setFormData] = useState<Partial<Course>>({
-        title: '',
-        short_summary: '',
-        price: 0,
-        is_free: false,
-        level: DifficultyLevel.BEGINNER,
-        status: CourseStatus.DRAFT,
-        technologies: []
-    });
 
     const handleOpenModal = (course?: Course) => {
-        if (course) {
-            setEditingCourse(course);
-            setFormData(course);
-        } else {
-            setEditingCourse(null);
-            setFormData({
-                title: '',
-                short_summary: '',
-                price: 0,
-                is_free: false,
-                level: DifficultyLevel.BEGINNER,
-                status: CourseStatus.DRAFT,
-                technologies: []
-            });
-        }
+        setEditingCourse(course || null);
         setOpenModal(true);
     };
 
@@ -146,31 +102,37 @@ const CourseManagement = () => {
 
     const handleDelete = (id: number) => {
         if (window.confirm('Are you sure you want to delete this course?')) {
-            setCourses(courses.filter(c => c.id !== id));
+            setCourses(prev => prev.filter(c => c.id !== id));
+            toast.success('Course deleted successfully');
         }
     };
 
-    const handleSubmit = () => {
+    const handleFormSubmit = (data: any) => {
         if (editingCourse) {
-            setCourses(courses.map(c => c.id === editingCourse.id ? { ...c, ...formData } as Course : c));
+            setCourses(prev => prev.map(c => c.id === editingCourse.id ? { ...c, ...data, updatedAt: new Date().toISOString().split('T')[0] } as Course : c));
+            toast.success('Course updated successfully');
         } else {
             const newCourse: Course = {
-                ...formData,
+                ...data,
                 id: Math.max(...courses.map(c => c.id), 0) + 1,
-                slug: (formData.title || '').toLowerCase().replace(/ /g, '-'),
+                slug: (data.title || '').toLowerCase().replace(/ /g, '-'),
                 chapters: [],
+                technologies: [], // Default for now
                 createdAt: new Date().toISOString().split('T')[0],
                 updatedAt: new Date().toISOString().split('T')[0],
             } as Course;
-            setCourses([newCourse, ...courses]);
+            setCourses(prev => [newCourse, ...prev]);
+            toast.success('Course created successfully');
         }
         handleCloseModal();
     };
 
-    const filteredCourses = courses.filter(course =>
-        course.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        course.short_summary?.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    const filteredCourses = useMemo(() =>
+        courses.filter(course =>
+            course.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            course.short_summary?.toLowerCase().includes(searchQuery.toLowerCase())
+        ),
+        [courses, searchQuery]);
 
     return (
         <Box sx={{ pb: 6 }}>
@@ -228,9 +190,9 @@ const CourseManagement = () => {
                 rowsPerPage={rowsPerPage}
                 onPageChange={setPage}
                 onRowsPerPageChange={setRowsPerPage}
-                onMenuOpen={handleMenuOpen}
-                anchorEl={anchorEl}
-                selectedCourse={selectedCourse}
+                onEdit={handleOpenModal}
+                onDelete={handleDelete}
+                onView={(course) => console.log('View course', course)}
             />
 
             {/* Course Modal */}
@@ -251,8 +213,9 @@ const CourseManagement = () => {
                 </DialogTitle>
                 <DialogContent>
                     <CourseForm
-                        formData={formData}
-                        setFormData={setFormData}
+                        id="course-form"
+                        initialData={editingCourse || undefined}
+                        onSubmit={handleFormSubmit}
                     />
                 </DialogContent>
                 <DialogActions sx={{ px: 3, pb: 3, pt: 1 }}>
@@ -263,9 +226,9 @@ const CourseManagement = () => {
                         Cancel
                     </Button>
                     <Button
+                        type="submit"
+                        form="course-form"
                         variant="contained"
-                        onClick={handleSubmit}
-                        disabled={!formData.title}
                         sx={{
                             borderRadius: 2.5,
                             px: 4,
@@ -277,59 +240,6 @@ const CourseManagement = () => {
                     </Button>
                 </DialogActions>
             </Dialog>
-
-            {/* Actions Menu */}
-            <Menu
-                anchorEl={anchorEl}
-                open={Boolean(anchorEl)}
-                onClose={handleMenuClose}
-                transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-                anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-                PaperProps={{
-                    sx: {
-                        borderRadius: 3,
-                        mt: 1,
-                        minWidth: 180,
-                        boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
-                        border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
-                        '& .MuiMenuItem-root': {
-                            px: 2,
-                            py: 1.2,
-                            borderRadius: 1.5,
-                            mx: 0.5,
-                            my: 0.2,
-                            '&:hover': {
-                                bgcolor: alpha(theme.palette.primary.main, 0.05),
-                                color: theme.palette.primary.main,
-                                '& .MuiListItemIcon-root': { color: theme.palette.primary.main }
-                            }
-                        }
-                    }
-                }}
-            >
-                <MenuItem onClick={() => { handleMenuClose(); /* View Details logic */ }}>
-                    <ListItemIcon><Visibility fontSize="small" /></ListItemIcon>
-                    <ListItemText primary="View Details" primaryTypographyProps={{ variant: 'body2', fontWeight: 600 }} />
-                </MenuItem>
-                <MenuItem onClick={() => {
-                    if (selectedCourse) handleOpenModal(selectedCourse);
-                    handleMenuClose();
-                }}>
-                    <ListItemIcon><Edit fontSize="small" /></ListItemIcon>
-                    <ListItemText primary="Edit Course" primaryTypographyProps={{ variant: 'body2', fontWeight: 600 }} />
-                </MenuItem>
-                <Divider sx={{ my: 1, opacity: 0.5 }} />
-                <MenuItem
-                    onClick={() => {
-                        if (selectedCourse) handleDelete(selectedCourse.id);
-                        handleMenuClose();
-                    }}
-                    sx={{ color: 'error.main', '&:hover': { bgcolor: alpha(theme.palette.error.main, 0.05) + ' !important' } }}
-                >
-                    <ListItemIcon><Delete fontSize="small" sx={{ color: 'error.main' }} /></ListItemIcon>
-                    <ListItemText primary="Delete Course" primaryTypographyProps={{ variant: 'body2', fontWeight: 600 }} />
-                </MenuItem>
-            </Menu>
         </Box>
     );
 };
